@@ -1129,17 +1129,21 @@ body::after, body::before {
 }
 
 .blog-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+  max-width: 1000px;      /* 跟 .about-container 一致 */
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;              /* 跟 .about-content 一致 */
 }
 
 .blog-post {
-    background: var(--card-background);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px var(--shadow);
-    transition: transform 0.3s ease;
+  background: var(--card-background);
+  padding: 2rem;
+  border-radius: 16px;    /* 跟 .about-section 一致 */
+  box-shadow: 0 4px 12px var(--shadow);  /* 跟 .about-section 一致 */
+  margin: 0 auto;
+  max-width: 100%;
 }
 
 .blog-post:hover {
@@ -9225,3 +9229,213 @@ button[onclick*="viewDetails"] {
   }
 }
 
+[data-theme="dark"] .navbar .nav-brand:hover,
+[data-theme="dark"] .navbar .nav-brand:focus {
+  color: #5b9df9 !important;
+}.navbar
+
+[data-theme="dark"] .blog-card,
+[data-theme="dark"] .sidebar-section,
+[data-theme="dark"] .about-card,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .blog-header,
+[data-theme="dark"] .blog-container,
+[data-theme="dark"] .about-section,
+[data-theme="dark"] .contact-card {
+  background: #23272f !important;
+  /* 保持 glassmorphism 效果可加透明度或 backdrop-filter */
+}
+
+[data-theme="dark"] .blog-post {
+  background: #32343a !important; /* 或者用 rgba(50,52,58,0.96) */
+  /* 如果需要玻璃拟态效果可加： */
+  /* backdrop-filter: blur(8px); */
+  /* box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18); */
+}
+
+[data-theme="dark"] .project-card {
+  background: #32343a !important;
+}
+
+[data-theme="dark"] .project-detail-container,
+[data-theme="dark"] .project-section,
+[data-theme="dark"] .project-side-info,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .about-card,
+[data-theme="dark"] .sidebar-section,
+[data-theme="dark"] .blog-post,
+[data-theme="dark"] .contact-card {
+  background: #32343a !important;
+}
+
+[data-theme="dark"] main,
+[data-theme="dark"] section,
+[data-theme="dark"] aside {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] .interest-item {
+  background: #32343a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18) !important;
+  border: none !important;
+  transition: background 0.3s, box-shadow 0.3s !important;
+}
+
+[data-theme="dark"] .interest-item:hover {
+  background: #393b42 !important;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22) !important;
+}
+
+[data-theme="dark"] .interest-item {
+  background: #32343a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18) !important;
+  border: none !important;
+  transition: background 0.3s, box-shadow 0.3s !important;
+}
+
+[data-theme="dark"] .interest-item:hover {
+  background: #393b42 !important;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22) !important;
+}
+
+[data-theme="dark"] .education-item {
+  background: #32343a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18) !important;
+  border: none !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+
+[data-theme="dark"] .education-item:hover {
+  background: #393b42 !important;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22) !important;
+  transform: scale(1.03);
+}
+
+[data-theme="dark"] .about-header {
+  background: #32343a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18) !important;
+  border: none !important;
+  transition: background 0.3s, box-shadow 0.3s !important;
+}
+
+/* 白天模式 Education 卡片毛玻璃和悬停动画 */
+.education-item {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px 0 rgba(60,64,67,0.08) !important;
+  border: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+.education-item:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(60,64,67,0.16) !important;
+  transform: scale(1.03);
+}
+
+/* 白天模式 Research Interests 四卡片毛玻璃效果和动画 */
+.interest-item {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px 0 rgba(60,64,67,0.08) !important;
+  border: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+.interest-item:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(60,64,67,0.16) !important;
+  transform: scale(1.03);
+}
+
+.blog-post {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px 0 rgba(60,64,67,0.08) !important;
+  border: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+.blog-post:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(60,64,67,0.16) !important;
+  transform: scale(1.03);
+}
+
+[data-theme="dark"] .blog-post {
+  background: #32343a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18) !important;
+  border: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+
+[data-theme="dark"] .blog-post:hover {
+  background: #393b42 !important;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22) !important;
+  transform: scale(1.03);
+}
+
+/* Blog 侧边栏小卡片白天模式毛玻璃风格和动画 */
+.sidebar-section {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px 0 rgba(60,64,67,0.08) !important;
+  border: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+.sidebar-section:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(60,64,67,0.16) !important;
+  transform: scale(1.03);
+}
+
+/* Blog 侧边栏小卡片夜间模式深色毛玻璃风格和动画 */
+[data-theme="dark"] .sidebar-section {
+  background: #32343a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18) !important;
+  border: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+[data-theme="dark"] .sidebar-section:hover {
+  background: #393b42 !important;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22) !important;
+  transform: scale(1.03);
+}
+
+.google-doodle-name {
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s !important;
+}
+.google-doodle-name:hover {
+  background: rgba(66, 133, 244, 0.10) !important;
+  box-shadow: 0 8px 32px 0 rgba(66,133,244,0.18) !important;
+  transform: scale(1.04) translateY(-2px) !important;
+}
+
+[data-theme="dark"] .project-detail-container,
+[data-theme="dark"] .project-section,
+[data-theme="dark"] .project-side-info,
+[data-theme="dark"] .project-detail-header,
+[data-theme="dark"] .project-detail-content,
+[data-theme="dark"] main,
+[data-theme="dark"] section,
+[data-theme="dark"] aside {
+  background: #23272f !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}

@@ -11,6 +11,107 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAvatar();
     initializeNavigation();
     initializeNameClick();
+
+    // 为项目卡片添加点击功能（仅projects页面，避免about页面影响头像）
+    if (window.location.pathname.includes('projects')) {
+        const projectCards = document.querySelectorAll('.project-card, .project-item');
+        projectCards.forEach(card => {
+            // 若HTML已有onclick则不重复添加
+            if (!card.hasAttribute('onclick')) {
+                card.addEventListener('click', function() {
+                    // 可自定义跳转逻辑
+                    console.log('项目卡片被点击');
+                });
+            }
+        });
+    }
+
+    // 只在桌面端执行强制删除绿色状态标签
+    if (window.innerWidth > 768 && window.location.pathname.includes('projects')) {
+        const badgeSelectors = [
+            '.status-badge',
+            '.project-status',
+            '.badge',
+            '.tag',
+            '.label',
+            '[class*="status"]',
+            '[class*="badge"]',
+            '[class*="Research"]',
+            '[class*="Production"]',
+            '[class*="Real-time"]',
+            '[class*="AI/ML"]'
+        ];
+        badgeSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                const computedStyle = window.getComputedStyle(el);
+                if (
+                    computedStyle.backgroundColor.includes('green') ||
+                    computedStyle.backgroundColor.includes('rgba(76, 175, 80') ||
+                    el.textContent.includes('Research') ||
+                    el.textContent.includes('Production') ||
+                    el.textContent.includes('Real-time') ||
+                    el.textContent.includes('AI/ML')
+                ) {
+                    el.remove();
+                }
+            });
+        });
+        // 额外检查所有span和div元素
+        const allSpans = document.querySelectorAll('span, div');
+        allSpans.forEach(span => {
+            const style = window.getComputedStyle(span);
+            const text = span.textContent.trim();
+            if ((style.backgroundColor.includes('green') || 
+                 style.backgroundColor.includes('#4CAF50') ||
+                 style.backgroundColor.includes('rgb(76, 175, 80)')) &&
+                (text === 'Research' || text === 'Production' || 
+                 text === 'Real-time' || text === 'AI/ML')) {
+                span.remove();
+            }
+        });
+    }
+
+    // 强制添加间距
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        // 找到指标数据区域
+        const metricsArea = card.querySelector('.project-metrics, .metrics-grid, .metrics-container, .project-stats, div:has(.metric-value)');
+        if (metricsArea) {
+            metricsArea.style.marginBottom = '40px';
+            metricsArea.style.paddingBottom = '24px';
+        }
+        // 移除所有小圆圈
+        const smallElements = card.querySelectorAll('*');
+        smallElements.forEach(el => {
+            const style = window.getComputedStyle(el);
+            const width = parseInt(style.width);
+            const height = parseInt(style.height);
+            const borderRadius = style.borderRadius;
+            if ((width <= 12 && height <= 12) && 
+                (borderRadius.includes('50%') || borderRadius.includes('px'))) {
+                el.style.display = 'none';
+            }
+            if (el.tagName === 'SPAN' || el.tagName === 'DIV') {
+                el.style.setProperty('--before-display', 'none', 'important');
+                el.style.setProperty('--after-display', 'none', 'important');
+            }
+        });
+    });
+    setTimeout(() => {
+        projectCards.forEach(card => {
+            const allElements = card.querySelectorAll('*');
+            allElements.forEach(el => {
+                if (el.offsetWidth <= 12 && el.offsetHeight <= 12) {
+                    const style = window.getComputedStyle(el);
+                    if (style.borderRadius.includes('50%') || 
+                        style.backgroundColor !== 'rgba(0, 0, 0, 0)') {
+                        el.remove();
+                    }
+                }
+            });
+        });
+    }, 500);
 });
 
 // Theme Toggle Functionality
@@ -474,15 +575,16 @@ document.head.appendChild(style);
   });
 })(); 
 
-function shareWebsite() {
+function shareProfile() {
+  const url = "https://zachzhang0928.github.io/zachzhang/";
   if (navigator.share) {
     navigator.share({
       title: "Zach Zhang's Portfolio",
       text: "Check out Zach Zhang's portfolio - CS Student at Northeastern University",
-      url: window.location.href
+      url: url
     });
   } else {
-    navigator.clipboard.writeText(window.location.href).then(() => {
+    navigator.clipboard.writeText(url).then(() => {
       showToast("Link copied to clipboard!");
     });
   }
