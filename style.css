@@ -62,6 +62,49 @@ body {
     font-weight: 400; /* Regular weight for body text */
 }
 
+/* 高级极简背景设计 */
+body::before, body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    width: 32vw;
+    height: 100vh;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.045;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+body::before {
+    left: 0;
+    background: radial-gradient(circle at 0% 50%, #eaeaea 0%, transparent 80%);
+}
+body::after {
+    right: 0;
+    background: radial-gradient(circle at 100% 50%, #eaeaea 0%, transparent 80%);
+}
+[data-theme="dark"] body::before {
+    background: radial-gradient(circle at 0% 50%, #23272f 0%, transparent 80%);
+}
+[data-theme="dark"] body::after {
+    background: radial-gradient(circle at 100% 50%, #23272f 0%, transparent 80%);
+}
+
+/* 极淡几何网格纹理 */
+body::after, body::before {
+    /* 叠加SVG网格纹理 */
+    background-image:
+      radial-gradient(circle at 0% 50%, #eaeaea 0%, transparent 80%),
+      url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="80" height="80" fill="none"/><g opacity="0.08"><path d="M0 0H80V80H0V0Z" stroke="%23b0b0b0" stroke-width="1"/><path d="M40 0V80" stroke="%23b0b0b0" stroke-width="0.5"/><path d="M0 40H80" stroke="%23b0b0b0" stroke-width="0.5"/></g></svg>');
+    background-blend-mode: lighten;
+}
+[data-theme="dark"] body::after, [data-theme="dark"] body::before {
+    background-image:
+      radial-gradient(circle at 0% 50%, #23272f 0%, transparent 80%),
+      url('data:image/svg+xml;utf8,<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="80" height="80" fill="none"/><g opacity="0.08"><path d="M0 0H80V80H0V0Z" stroke="%23444" stroke-width="1"/><path d="M40 0V80" stroke="%23444" stroke-width="0.5"/><path d="M0 40H80" stroke="%23444" stroke-width="0.5"/></g></svg>');
+    background-blend-mode: lighten;
+}
+
 /* Navigation */
 .navbar {
     display: flex;
@@ -1868,3 +1911,39 @@ body {
     background: rgba(91, 157, 249, 0.15);
     box-shadow: 0 4px 12px rgba(91, 157, 249, 0.3);
 } 
+
+/* Footer 样式 - 主题自适应 */
+.footer {
+    background: #f5f5f5;
+    color: #666;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-top: 80px;
+    width: 100%;
+    letter-spacing: 0.02em;
+    transition: background 0.3s, color 0.3s;
+}
+[data-theme="dark"] .footer {
+    background: #2a2a2a;
+    color: #888;
+} 
+
+/* 主内容容器宽度优化 */
+.about-container,
+.projects-container,
+.blog-container,
+.project-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+} 
+
+/* 删除夜间泼墨风格装饰元素样式 */ 
+
+/* 彩虹光条装饰 - 精确避开footer */
+ 
