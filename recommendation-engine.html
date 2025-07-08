@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Recommendation Engine - Zach Zhang</title>
+    <meta name="description" content="Large-scale deep learning recommendation system with Neural Collaborative Filtering">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-brand">Zach's Portfolio</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="projects.html" class="nav-link">Projects</a>
+            <a href="blog.html" class="nav-link">Blog</a>
+            <a href="about.html" class="nav-link">About</a>
+            <button class="theme-toggle" id="theme-toggle">
+                <span class="material-icons">light_mode</span>
+            </button>
+        </div>
+        <div class="nav-toggle" id="nav-toggle">
+            <span class="material-icons">menu</span>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="project-detail-container">
+        <header class="project-detail-header">
+            <div class="project-detail-intro">
+                <h1>Smart Recommendation Engine</h1>
+                <p class="project-subtitle">Large-scale Deep Learning Recommendation System</p>
+                <div class="project-meta">
+                    <span class="project-location">Production System</span>
+                    <span class="project-period">2023 - 2024</span>
+                </div>
+            </div>
+            <div class="project-stats-overview">
+                <div class="stat-item">
+                    <span class="stat-number">35%</span>
+                    <span class="stat-label">Accuracy Improvement</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">&lt;100ms</span>
+                    <span class="stat-label">Response Time</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1M+</span>
+                    <span class="stat-label">Users Served</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="project-detail-content">
+            <div class="project-section">
+                <h2>Project Overview</h2>
+                <p>
+                    The Smart Recommendation Engine is a production-ready recommendation system that leverages 
+                    deep learning techniques to provide personalized recommendations at scale. Built for 
+                    high-performance, real-time recommendations, this system serves over 1 million users 
+                    with sub-100ms response times.
+                </p>
+                <p>
+                    The system implements Neural Collaborative Filtering (NCF) combined with content-based 
+                    features to achieve superior recommendation accuracy while maintaining high throughput 
+                    and low latency requirements.
+                </p>
+            </div>
+
+            <div class="project-section">
+                <h2>Technical Architecture</h2>
+                <div class="approach-grid">
+                    <div class="approach-item">
+                        <span class="material-icons">psychology</span>
+                        <h3>Neural CF</h3>
+                        <p>Implemented Neural Collaborative Filtering with multi-layer perceptrons to capture complex user-item interactions.</p>
+                    </div>
+                    <div class="approach-item">
+                        <span class="material-icons">speed</span>
+                        <h3>Real-time Processing</h3>
+                        <p>Built with Redis caching and optimized database queries to achieve sub-100ms response times.</p>
+                    </div>
+                    <div class="approach-item">
+                        <span class="material-icons">scatter_plot</span>
+                        <h3>Content Features</h3>
+                        <p>Integrated content-based features including item embeddings and user behavior patterns.</p>
+                    </div>
+                    <div class="approach-item">
+                        <span class="material-icons">auto_awesome</span>
+                        <h3>A/B Testing</h3>
+                        <p>Implemented comprehensive A/B testing framework to continuously optimize recommendation quality.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>Technology Stack</h2>
+                <div class="tech-stack-grid">
+                    <div class="tech-category">
+                        <h3>Backend</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Django</span>
+                            <span class="tech-tag">FastAPI</span>
+                            <span class="tech-tag">Celery</span>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h3>Machine Learning</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">TensorFlow</span>
+                            <span class="tech-tag">Scikit-learn</span>
+                            <span class="tech-tag">Pandas</span>
+                            <span class="tech-tag">NumPy</span>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h3>Frontend</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">TypeScript</span>
+                            <span class="tech-tag">Redux</span>
+                            <span class="tech-tag">Material-UI</span>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h3>Infrastructure</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">PostgreSQL</span>
+                            <span class="tech-tag">Redis</span>
+                            <span class="tech-tag">Docker</span>
+                            <span class="tech-tag">AWS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>Key Results</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-header">
+                            <span class="material-icons">trending_up</span>
+                            <h3>Recommendation Accuracy</h3>
+                        </div>
+                        <p>35% improvement in recommendation accuracy compared to traditional collaborative filtering methods.</p>
+                        <div class="result-metrics">
+                            <span class="metric">Baseline: 65%</span>
+                            <span class="metric">Improved: 87.8%</span>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-header">
+                            <span class="material-icons">speed</span>
+                            <h3>Response Time</h3>
+                        </div>
+                        <p>Achieved sub-100ms response times through optimized caching and database queries.</p>
+                        <div class="result-metrics">
+                            <span class="metric">Average: 85ms</span>
+                            <span class="metric">P95: 95ms</span>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-header">
+                            <span class="material-icons">people</span>
+                            <h3>User Engagement</h3>
+                        </div>
+                        <p>Significant increase in user engagement metrics including click-through rates and session duration.</p>
+                        <div class="result-metrics">
+                            <span class="metric">CTR: +28%</span>
+                            <span class="metric">Session: +42%</span>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-header">
+                            <span class="material-icons">scale</span>
+                            <h3>Scalability</h3>
+                        </div>
+                        <p>Successfully scaled to serve over 1 million users with horizontal scaling and load balancing.</p>
+                        <div class="result-metrics">
+                            <span class="metric">Users: 1M+</span>
+                            <span class="metric">QPS: 10k+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>System Architecture</h2>
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <h3>Data Pipeline</h3>
+                        <p>Real-time data ingestion and processing pipeline with Apache Kafka and Spark streaming.</p>
+                    </div>
+                    <div class="impact-item">
+                        <h3>Model Serving</h3>
+                        <p>TensorFlow Serving for model deployment with automatic scaling and versioning.</p>
+                    </div>
+                    <div class="impact-item">
+                        <h3>Caching Layer</h3>
+                        <p>Multi-level caching with Redis for user preferences and recommendation results.</p>
+                    </div>
+                    <div class="impact-item">
+                        <h3>Monitoring</h3>
+                        <p>Comprehensive monitoring with Prometheus, Grafana, and custom metrics tracking.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>Challenges & Solutions</h2>
+                <div class="challenges-grid">
+                    <div class="challenge-item">
+                        <h3>Challenge: Cold Start Problem</h3>
+                        <p>New users and items had limited interaction data for accurate recommendations.</p>
+                        <h4>Solution:</h4>
+                        <p>Implemented hybrid approach combining content-based features with collaborative filtering for new users/items.</p>
+                    </div>
+                    <div class="challenge-item">
+                        <h3>Challenge: Scalability</h3>
+                        <p>Traditional recommendation algorithms couldn't handle millions of users and items.</p>
+                        <h4>Solution:</h4>
+                        <p>Designed distributed architecture with sharding, caching, and horizontal scaling strategies.</p>
+                    </div>
+                    <div class="challenge-item">
+                        <h3>Challenge: Real-time Updates</h3>
+                        <p>User preferences and item popularity changed rapidly, requiring real-time model updates.</p>
+                        <h4>Solution:</h4>
+                        <p>Built incremental learning pipeline with online model updates and feature drift detection.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="project-sidebar">
+            <div class="sidebar-section">
+                <h3>Project Links</h3>
+                <div class="project-links">
+                    <a href="#" class="project-link">
+                        <span class="material-icons">code</span>
+                        GitHub Repository
+                    </a>
+                    <a href="#" class="project-link">
+                        <span class="material-icons">article</span>
+                        Technical Paper
+                    </a>
+                    <a href="#" class="project-link">
+                        <span class="material-icons">play_circle</span>
+                        Demo Video
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Team</h3>
+                <div class="team-members">
+                    <div class="team-member">
+                        <span class="member-name">Zach Zhang</span>
+                        <span class="member-role">Lead Developer</span>
+                    </div>
+                    <div class="team-member">
+                        <span class="member-name">Emily Chen</span>
+                        <span class="member-role">ML Engineer</span>
+                    </div>
+                    <div class="team-member">
+                        <span class="member-name">David Kim</span>
+                        <span class="member-role">Backend Engineer</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">Mar 2023</span>
+                        <span class="timeline-event">Project Start</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">Jun 2023</span>
+                        <span class="timeline-event">MVP Release</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">Sep 2023</span>
+                        <span class="timeline-event">Production Launch</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">Dec 2023</span>
+                        <span class="timeline-event">1M Users Milestone</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html> 

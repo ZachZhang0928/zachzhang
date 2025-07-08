@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zach Zhang - CS Student & ML Researcher</title>
+    <meta name="description" content="CS Student at Northeastern University | Machine Learning Researcher focused on AI/ML applications">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-brand">Zach's Portfolio</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="projects.html" class="nav-link">Projects</a>
+            <a href="blog.html" class="nav-link">Blog</a>
+            <a href="about.html" class="nav-link">About</a>
+            <button class="theme-toggle" id="theme-toggle">
+                <span class="material-icons">light_mode</span>
+            </button>
+        </div>
+        <div class="nav-toggle" id="nav-toggle">
+            <span class="material-icons">menu</span>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="hero-section">
+        <!-- 头像组件 -->
+        <div class="profile-avatar">
+            <input type="file" id="avatar-upload" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            <div class="avatar-container">
+                <img id="avatar-img" src="" alt="Zach Zhang" style="display: none;">
+                <div class="avatar-placeholder">
+                    <span class="material-icons">person</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 名字 - 可点击跳转到About页面 -->
+        <h1 class="google-doodle-name">
+            <span class="letter-z1">Z</span><span class="letter-a1">a</span><span class="letter-c">c</span><span class="letter-h1">h</span>
+            <span class="space"> </span>
+            <span class="letter-z2">Z</span><span class="letter-h2">h</span><span class="letter-a2">a</span><span class="letter-n">n</span><span class="letter-g">g</span>
+        </h1>
+
+        <!-- 描述信息 -->
+        <p class="hero-subtitle">CS Student at Northeastern University | Machine Learning Researcher at North Carolina State University</p>
+        <p class="hero-description">Python/Django Developer • Boston</p>
+
+        <!-- CTA按钮 -->
+        <a href="projects.html" class="cta-button">View My Projects</a>
+    </main>
+
+    <!-- 特色研究区域 -->
+    <section class="featured-research">
+        <h2>Featured Research</h2>
+        <div class="project-card" onclick="window.location.href='ncsu-optimization.html'">
+            <h3>Neural Network Optimization Suite</h3>
+            <p>Advanced ML Model Compression & Acceleration Research at NC State.</p>
+            <button class="learn-more-btn">Learn More</button>
+        </div>
+    </section>
+
+    <script src="main.js"></script>
+</body>
+</html> 
