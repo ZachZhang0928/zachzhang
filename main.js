@@ -1,6 +1,13 @@
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initializeTheme();
+    console.log('DOM Content Loaded - Initializing components...');
+    
+    // 确保只初始化一次
+    if (!window.themeInitialized) {
+        initializeTheme();
+        window.themeInitialized = true;
+    }
+    
     initializeAvatar();
     initializeNavigation();
     initializeNameClick();
@@ -9,33 +16,79 @@ document.addEventListener('DOMContentLoaded', function() {
 // Theme Toggle Functionality
 function initializeTheme() {
     const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
+    const html = document.documentElement;
+
+    // 验证localStorage可用性
+    const isLocalStorageAvailable = (() => {
+        try {
+            const test = '__localStorage_test__';
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+        } catch (e) {
+            console.warn('localStorage not available:', e);
+            return false;
+        }
+    })();
 
     if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
+        // 移除可能存在的旧事件监听器
+        themeToggle.removeEventListener('click', toggleThemeHandler);
+        
+        // 添加新的事件监听器
+        themeToggle.addEventListener('click', toggleThemeHandler);
+        
+        console.log('Theme toggle button initialized successfully');
+    } else {
+        console.error('Theme toggle button not found!');
+    }
+
+    // 主题切换处理函数
+    function toggleThemeHandler() {
+        try {
+            console.log('Theme toggle clicked'); // 调试日志
+            
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            console.log('Current theme:', currentTheme); // 调试日志
+            
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            // 同时更新DOM和localStorage
+            html.setAttribute('data-theme', newTheme);
+            
+            if (isLocalStorageAvailable) {
+                localStorage.setItem('theme', newTheme);
+            }
             
             // Update button icon
             const icon = themeToggle.querySelector('.material-icons');
             if (icon) {
                 icon.textContent = newTheme === 'dark' ? 'dark_mode' : 'light_mode';
             }
-        });
+            
+            console.log('Theme changed to:', newTheme); // 调试日志
+        } catch (error) {
+            console.error('Error toggling theme:', error);
+        }
     }
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    body.setAttribute('data-theme', savedTheme);
-    
-    if (themeToggle) {
-        const icon = themeToggle.querySelector('.material-icons');
-        if (icon) {
-            icon.textContent = savedTheme === 'dark' ? 'dark_mode' : 'light_mode';
+    // Load saved theme and update button icon
+    try {
+        const savedTheme = isLocalStorageAvailable ? (localStorage.getItem('theme') || 'light') : 'light';
+        html.setAttribute('data-theme', savedTheme);
+        
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('.material-icons');
+            if (icon) {
+                icon.textContent = savedTheme === 'dark' ? 'dark_mode' : 'light_mode';
+            }
         }
+        
+        console.log('Theme loaded:', savedTheme);
+    } catch (error) {
+        console.error('Error loading theme:', error);
+        // 设置默认主题
+        html.setAttribute('data-theme', 'light');
     }
 }
 
@@ -46,6 +99,26 @@ function initializeAvatar() {
     const avatarImg = document.getElementById('avatar-img');
     const avatarPlaceholder = document.querySelector('.avatar-placeholder');
 
+    // Check if we're on the about page
+    const isAboutPage = window.location.pathname.includes('about.html');
+    
+    if (isAboutPage) {
+        // About page: only load avatar from storage, no interactions
+        const aboutAvatarImg = document.getElementById('avatar-img-about');
+        const aboutAvatarPlaceholder = document.querySelector('.about-avatar .avatar-placeholder');
+        
+        if (aboutAvatarImg && aboutAvatarPlaceholder) {
+            const savedAvatar = localStorage.getItem('userAvatar');
+            if (savedAvatar) {
+                aboutAvatarImg.src = savedAvatar;
+                aboutAvatarImg.style.display = 'block';
+                aboutAvatarPlaceholder.style.display = 'none';
+            }
+        }
+        return;
+    }
+
+    // Home page: full avatar functionality
     if (!avatarUpload || !avatarContainer || !avatarImg || !avatarPlaceholder) {
         return;
     }
@@ -189,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Add loading animation for page transitions
 window.addEventListener('load', function() {
-    document.body.classList.add('loaded');
+    document.documentElement.classList.add('loaded');
 });
 
 // Add intersection observer for animations

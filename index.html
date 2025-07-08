@@ -5,11 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zach Zhang - CS Student & ML Researcher</title>
     <meta name="description" content="CS Student at Northeastern University | Machine Learning Researcher focused on AI/ML applications">
+    <!-- 主题预加载脚本 - 防止页面跳转时的频闪 -->
+    <script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body data-theme="light">
+<body>
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-brand">Zach's Portfolio</div>
@@ -48,21 +57,31 @@
         </h1>
 
         <!-- 描述信息 -->
-        <p class="hero-subtitle">CS Student at Northeastern University | Machine Learning Researcher at North Carolina State University</p>
-        <p class="hero-description">Python/Django Developer • Boston</p>
+        <p class="hero-subtitle">CS Student at Northeastern University</p>
+        <p class="hero-description">Python • AI • Machine Learning • Django Developer</p>
+        <p class="hero-location">Boston</p>
 
         <!-- CTA按钮 -->
         <a href="projects.html" class="cta-button">View My Projects</a>
     </main>
 
     <!-- 特色研究区域 -->
-    <section class="featured-research">
-        <h2>Featured Research</h2>
-        <div class="project-card" onclick="window.location.href='ncsu-optimization.html'">
-            <h3>Neural Network Optimization Suite</h3>
-            <p>Advanced ML Model Compression & Acceleration Research at NC State.</p>
-            <button class="learn-more-btn">Learn More</button>
-        </div>
+    <section class="contact-section">
+      <h2>Get In Touch</h2>
+      <div class="contact-links">
+        <a href="mailto:zachzhangzz0928@google.com" class="contact-item">
+          <span class="material-icons">email</span>
+          <span>Email</span>
+        </a>
+        <a href="https://www.linkedin.com/in/%E9%9C%87-%E5%BC%A0-8b3b09342" class="contact-item" target="_blank">
+          <span class="material-icons">work</span>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://github.com/ZachZhang0928" class="contact-item" target="_blank">
+          <span class="material-icons">code</span>
+          <span>GitHub</span>
+        </a>
+      </div>
     </section>
 
     <script src="main.js"></script>
