@@ -1299,6 +1299,29 @@ body::after, body::before {
 .subscribe-btn:hover {
     background: #3367d6;
 }
+/* 让订阅卡片和Categories一致的毛玻璃风格 */
+.subscribe-section {
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow);
+  padding: 1.5rem;
+  margin: 2rem 0 0 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.subscribe-section h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--google-blue);
+  padding-bottom: 0.5rem;
+}
+.subscribe-section p {
+  color: var(--text-secondary);
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+}
 
 @media (max-width: 1024px) {
     .blog-container {
