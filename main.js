@@ -103,17 +103,47 @@ function initializeAvatar() {
     const isAboutPage = window.location.pathname.includes('about.html');
     
     if (isAboutPage) {
-        // About page: only load avatar from storage, no interactions
+        // About page: 优先显示本地profile_pic/profile.JPG
         const aboutAvatarImg = document.getElementById('avatar-img-about');
         const aboutAvatarPlaceholder = document.querySelector('.about-avatar .avatar-placeholder');
-        
-        if (aboutAvatarImg && aboutAvatarPlaceholder) {
-            const savedAvatar = localStorage.getItem('userAvatar');
-            if (savedAvatar) {
-                aboutAvatarImg.src = savedAvatar;
-                aboutAvatarImg.style.display = 'block';
-                aboutAvatarPlaceholder.style.display = 'none';
+        if (aboutAvatarImg) {
+            const aboutAvatarPlaceholderIcon = document.getElementById('avatar-placeholder-icon');
+            const avatarRing = aboutAvatarImg.parentElement; // .avatar-rainbow-border
+            const avatarContainer = document.getElementById('about-avatar-upload-area');
+            // 页面加载时整体隐藏头像区域
+            avatarContainer.style.visibility = 'hidden';
+            function showAvatarWithRing(imgUrl) {
+                // 预加载
+                const preload = new window.Image();
+                preload.onload = function() {
+                    aboutAvatarImg.src = imgUrl;
+                    aboutAvatarImg.style.display = 'block';
+                    if (aboutAvatarPlaceholderIcon) aboutAvatarPlaceholderIcon.style.display = 'none';
+                    avatarContainer.style.visibility = 'visible';
+                };
+                preload.onerror = function() {
+                    aboutAvatarImg.style.display = 'none';
+                    if (aboutAvatarPlaceholderIcon) aboutAvatarPlaceholderIcon.style.display = '';
+                    avatarContainer.style.visibility = 'visible';
+                };
+                preload.src = imgUrl;
             }
+            // 优先本地图片
+            fetch('profile_pic/profile.JPG')
+                .then(res => {
+                    if (res.ok) {
+                        showAvatarWithRing('profile_pic/profile.JPG');
+                    } else {
+                        aboutAvatarImg.style.display = 'none';
+                        if (aboutAvatarPlaceholderIcon) aboutAvatarPlaceholderIcon.style.display = '';
+                        avatarContainer.style.visibility = 'visible';
+                    }
+                })
+                .catch(() => {
+                    aboutAvatarImg.style.display = 'none';
+                    if (aboutAvatarPlaceholderIcon) aboutAvatarPlaceholderIcon.style.display = '';
+                    avatarContainer.style.visibility = 'visible';
+                });
         }
         return;
     }
@@ -187,6 +217,34 @@ function initializeAvatar() {
         avatarPlaceholder.style.display = 'none';
     }
 }
+
+// About页面头像上传功能（无按钮，仅区域点击）
+(function() {
+    const uploadArea = document.getElementById('about-avatar-upload-area');
+    const fileInput = document.getElementById('about-avatar-upload');
+    const avatarImg = document.getElementById('avatar-img-about');
+    const placeholder = uploadArea ? uploadArea.querySelector('.avatar-placeholder') : null;
+    if (!uploadArea || !fileInput || !avatarImg) return;
+    // 仅点击区域触发上传
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        if (!/^image\/(jpeg|png|gif|webp)$/.test(file.type)) {
+            alert('仅支持jpg、png、gif、webp格式图片');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            avatarImg.src = e.target.result;
+            avatarImg.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    });
+})();
 
 // Mobile Navigation Toggle
 function initializeNavigation() {
@@ -319,3 +377,131 @@ style.textContent = `
     body.loaded .hero-section > *:nth-child(5) { transition-delay: 0.5s; }
 `;
 document.head.appendChild(style); 
+
+// 首页Google风格照片轮播 - 终极无缝平滑循环（轨道宽度覆盖可视区+一组，绝无断层）
+(function() {
+    const track = document.querySelector('.material-carousel-track');
+    if (!track) return;
+    // 只保留原始6张图片
+    while (track.children.length > 6) track.removeChild(track.lastChild);
+    const imgs = Array.from(track.children);
+    // 计算单组总宽度
+    function getGroupWidth() {
+        let w = 0;
+        for (let i = 0; i < 6; i++) {
+            w += track.children[i].offsetWidth;
+            if (i < 5) w += parseInt(getComputedStyle(track.children[i]).marginRight);
+        }
+        return w;
+    }
+    // 填充足够多的图片组，保证track宽度大于等于容器宽度+一组，实现彻底无缝
+    function fillTrackAndGetWidth() {
+        while (track.children.length > 6) track.removeChild(track.lastChild);
+        const groupWidth = getGroupWidth();
+        const container = track.parentElement;
+        const containerWidth = container.offsetWidth;
+        let n = Math.ceil((containerWidth + groupWidth) / groupWidth);
+        for (let i = 1; i < n; i++) {
+            imgs.forEach(img => {
+                const clone = img.cloneNode(true);
+                track.appendChild(clone);
+            });
+        }
+        return groupWidth;
+    }
+    // 等待图片全部加载后再开始动画
+    let imagesLoaded = 0;
+    const allImgs = track.querySelectorAll('img');
+    allImgs.forEach(img => {
+        if (img.complete) imagesLoaded++;
+        else img.addEventListener('load', () => {
+            imagesLoaded++;
+            if (imagesLoaded === allImgs.length) startCarousel();
+        });
+    });
+    if (imagesLoaded === allImgs.length) startCarousel();
+    function startCarousel() {
+        let groupWidth = fillTrackAndGetWidth();
+        let pxPerSecond = 70; // 慢速
+        let pos = 0;
+        function updateWidth() {
+            groupWidth = fillTrackAndGetWidth();
+        }
+        window.addEventListener('resize', updateWidth);
+        let lastTime = performance.now();
+        let container = track.parentElement;
+        function animate(now) {
+            const delta = (now - lastTime) / 1000;
+            lastTime = now;
+            pos += pxPerSecond * delta;
+            const maxScroll = track.scrollWidth - container.offsetWidth;
+            if (pos >= maxScroll) {
+                pos = 0;
+                track.style.transition = 'none';
+                track.style.transform = `translateX(${-pos}px)`;
+                void track.offsetWidth;
+                track.style.transition = '';
+            } else {
+                track.style.transform = `translateX(${-pos}px)`;
+            }
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+    }
+})(); 
+
+// 禁用所有照片的拖拽和右键功能
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    const photos = document.querySelectorAll('.photo-item img');
+    photos.forEach(photo => {
+      // 禁用拖拽
+      photo.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+      });
+      // 禁用右键菜单
+      photo.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+      });
+      // 禁用选择
+      photo.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    });
+  });
+})(); 
+
+function shareWebsite() {
+  if (navigator.share) {
+    navigator.share({
+      title: "Zach Zhang's Portfolio",
+      text: "Check out Zach Zhang's portfolio - CS Student at Northeastern University",
+      url: window.location.href
+    });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      showToast("Link copied to clipboard!");
+    });
+  }
+}
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    z-index: 1000;
+    font-size: 14px;
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+} 
