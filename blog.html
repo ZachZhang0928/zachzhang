@@ -4,7 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Zach Zhang</title>
-    <meta name="description" content="Technical articles and research insights by Zach Zhang">
+    <!-- 统一SEO标签 -->
+    <meta name="description" content="Zach Zhang - CS Student at Northeastern University, Python/AI/ML Developer. Portfolio showcasing AI, Machine Learning, and Django projects in Boston.">
+    <meta name="keywords" content="Python, AI, Machine Learning, Django, Computer Science, Northeastern University, Boston, Zach Zhang, Portfolio">
+    <meta name="author" content="Zach Zhang">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://zachzhang0928.github.io/zachzhang/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Zach Zhang - CS Student | Python AI Developer | Northeastern University">
+    <meta property="og:description" content="Zach Zhang - CS Student at Northeastern University, Python/AI/ML Developer. Portfolio showcasing AI, Machine Learning, and Django projects in Boston.">
+    <meta property="og:url" content="https://zachzhang0928.github.io/zachzhang/">
+    <meta property="og:image" content="https://zachzhang0928.github.io/zachzhang/og-image.jpg">
+    <meta property="og:site_name" content="Zach Zhang Portfolio">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zach Zhang - CS Student | Python AI Developer | Northeastern University">
+    <meta name="twitter:description" content="Zach Zhang - CS Student at Northeastern University, Python/AI/ML Developer. Portfolio showcasing AI, Machine Learning, and Django projects in Boston.">
+    <meta name="twitter:image" content="https://zachzhang0928.github.io/zachzhang/og-image.jpg">
+    <meta name="twitter:site" content="@your_twitter">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Zach Zhang","url":"https://zachzhang0928.github.io/zachzhang/","image":"https://zachzhang0928.github.io/zachzhang/og-image.jpg","jobTitle":"CS Student, Python AI Developer","worksFor":{"@type":"CollegeOrUniversity","name":"Northeastern University"},"sameAs":["mailto:zachzhang0928@gmail.com","https://linkedin.com/in/yourprofile","https://github.com/zachzhang0928","https://instagram.com/zachary0928"]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Zach Zhang Portfolio","url":"https://zachzhang0928.github.io/zachzhang/","potentialAction":{"@type":"SearchAction","target":"https://zachzhang0928.github.io/zachzhang/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zachzhang0928.github.io/zachzhang/"}]} </script>
     <!-- 主题预加载脚本 - 防止页面跳转时的频闪 -->
     <script>
     (function() {
@@ -18,9 +37,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="fade-in">
     <!-- 导航栏 -->
     <nav class="navbar">
         <a href="index.html" class="nav-brand" id="nav-logo">Zach's Portfolio</a>
@@ -231,25 +249,28 @@
         </aside>
     </main>
 
-    <script src="main.js"></script>
+    <script src="main.min.js"></script>
     <footer class="site-footer">
-      <div class="footer-content">
-        <div class="footer-text">
-          <p>&copy; 2025 Zach Zhang • Northeastern University</p>
+      <div class="footer-row">
+        <div class="footer-center">
+          <span class="footer-copyright">© 2025 Zach Zhang • Northeastern University</span>
         </div>
-        <div class="contact-buttons">
-          <button class="contact-btn email-btn" onclick="location.href='mailto:zachzhangzz0928@gmail.com'">
-            <i class="fas fa-envelope"></i>
-          </button>
-          <button class="contact-btn linkedin-btn" onclick="window.open('https://linkedin.com/in/your-profile', '_blank')">
-            <i class="fab fa-linkedin-in"></i>
-          </button>
-          <button class="contact-btn github-btn" onclick="window.open('https://github.com/ZachZhang0928', '_blank')">
-            <i class="fab fa-github"></i>
-          </button>
-          <button class="contact-btn share-btn" onclick="shareProfile()">
-            <i class="fas fa-paper-plane"></i>
-          </button>
+        <div class="footer-right">
+          <a href="mailto:zachzhangzz0928@gmail.com" class="footer-contact-icon" title="Email">
+            <span class="material-icons">email</span>
+          </a>
+          <a href="https://www.linkedin.com/in/%E9%9C%87-%E5%BC%A0-8b3b09342?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="footer-contact-icon" target="_blank" title="LinkedIn">
+            <span class="material-icons">work</span>
+          </a>
+          <a href="https://github.com/ZachZhang0928" class="footer-contact-icon" target="_blank" title="GitHub">
+            <span class="material-icons">code</span>
+          </a>
+          <a href="https://instagram.com/zachary0928" class="footer-contact-icon" target="_blank" title="Instagram">
+            <span class="material-icons">camera_alt</span>
+          </a>
+          <a href="#" class="footer-contact-icon" title="Share">
+            <span class="material-icons">send</span>
+          </a>
         </div>
       </div>
     </footer>

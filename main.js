@@ -112,6 +112,100 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }, 500);
+
+    // === 轮播初始化 ===
+    (function() {
+        const track = document.querySelector('.material-carousel-track');
+        if (!track) return;
+        const MAX_IMAGES = 20; // 最大支持20张照片
+        while (track.children.length > MAX_IMAGES) track.removeChild(track.lastChild);
+        const imgs = Array.from(track.children);
+        function getGroupWidth() {
+            let w = 0;
+            for (let i = 0; i < imgs.length; i++) {
+                w += track.children[i].offsetWidth;
+                if (i < imgs.length - 1) w += parseInt(getComputedStyle(track.children[i]).marginRight);
+            }
+            return w;
+        }
+        function fillTrackAndGetWidth() {
+            while (track.children.length > MAX_IMAGES) track.removeChild(track.lastChild);
+            const groupWidth = getGroupWidth();
+            const container = track.parentElement;
+            const containerWidth = container.offsetWidth;
+            let n = Math.ceil((containerWidth + groupWidth * 2) / groupWidth);
+            for (let i = 1; i < n; i++) {
+                imgs.forEach(img => {
+                    const clone = img.cloneNode(true);
+                    track.appendChild(clone);
+                });
+            }
+            return groupWidth;
+        }
+        let started = false;
+        function startCarouselOnce() {
+            if (!started) {
+                started = true;
+                startCarousel();
+            }
+        }
+        const allImgs = track.querySelectorAll('img');
+        let loadedCount = 0;
+        allImgs.forEach(img => {
+            if (img.complete) loadedCount++;
+            else {
+                img.addEventListener('load', () => {
+                    loadedCount++;
+                    if (loadedCount === allImgs.length) startCarouselOnce();
+                });
+                img.addEventListener('error', () => {
+                    loadedCount++;
+                    if (loadedCount === allImgs.length) startCarouselOnce();
+                });
+            }
+        });
+        // 兜底：无论图片加载状态如何，500ms后强制启动轮播
+        setTimeout(startCarouselOnce, 500);
+        let rafId = null;
+        let pos = 0;
+        let groupWidth = 0;
+        function startCarousel() {
+            groupWidth = fillTrackAndGetWidth();
+            let pxPerSecond = 70;
+            pos = 0;
+            function updateWidth() {
+                groupWidth = fillTrackAndGetWidth();
+            }
+            window.addEventListener('resize', updateWidth);
+            let lastTime = performance.now();
+            function animate(now) {
+                const delta = (now - lastTime) / 1000;
+                lastTime = now;
+                pos += pxPerSecond * delta;
+                if (pos >= groupWidth) {
+                    pos -= groupWidth;
+                    track.style.transition = 'none';
+                    track.style.transform = `translateX(${-pos}px)`;
+                    void track.offsetWidth;
+                    track.style.transition = '';
+                } else {
+                    track.style.transform = `translateX(${-pos}px)`;
+                }
+                rafId = requestAnimationFrame(animate);
+            }
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(animate);
+        }
+        // 禁止拖动/滑动/鼠标/触摸交互
+        track.onmousedown = track.ontouchstart = track.ontouchmove = track.ontouchend = null;
+        window.onmousemove = window.ontouchmove = window.onmouseup = window.ontouchend = null;
+        // 禁止画廊区域的滚动和交互
+        track.addEventListener('wheel', e => e.preventDefault(), {passive: false});
+        track.addEventListener('touchmove', e => e.preventDefault(), {passive: false});
+        track.addEventListener('pointerdown', e => e.preventDefault());
+        track.addEventListener('mousedown', e => e.preventDefault());
+        track.addEventListener('selectstart', e => e.preventDefault());
+    })();
 });
 
 // Theme Toggle Functionality
@@ -347,47 +441,6 @@ function initializeAvatar() {
     });
 })();
 
-// Mobile Navigation Toggle
-function initializeNavigation() {
-    const navToggle = document.getElementById('nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (navToggle && navLinks) {
-        navToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-            
-            // Update menu icon
-            const icon = navToggle.querySelector('.material-icons');
-            if (icon) {
-                icon.textContent = navLinks.classList.contains('active') ? 'close' : 'menu';
-            }
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('active');
-                const icon = navToggle.querySelector('.material-icons');
-                if (icon) {
-                    icon.textContent = 'menu';
-                }
-            }
-        });
-
-        // Close mobile menu when clicking on a link
-        const navLinkElements = navLinks.querySelectorAll('.nav-link');
-        navLinkElements.forEach(link => {
-            link.addEventListener('click', function() {
-                navLinks.classList.remove('active');
-                const icon = navToggle.querySelector('.material-icons');
-                if (icon) {
-                    icon.textContent = 'menu';
-                }
-            });
-        });
-    }
-}
-
 // Name Click Navigation
 function initializeNameClick() {
     const googleDoodleName = document.querySelector('.google-doodle-name');
@@ -401,6 +454,7 @@ function initializeNameClick() {
 
 // Smooth scrolling for anchor links
 document.addEventListener('DOMContentLoaded', function() {
+    document.documentElement.classList.add('loaded');
     const links = document.querySelectorAll('a[href^="#"]');
     
     links.forEach(link => {
@@ -479,78 +533,6 @@ style.textContent = `
 `;
 document.head.appendChild(style); 
 
-// 首页Google风格照片轮播 - 终极无缝平滑循环（轨道宽度覆盖可视区+一组，绝无断层）
-(function() {
-    const track = document.querySelector('.material-carousel-track');
-    if (!track) return;
-    // 只保留原始6张图片
-    while (track.children.length > 6) track.removeChild(track.lastChild);
-    const imgs = Array.from(track.children);
-    // 计算单组总宽度
-    function getGroupWidth() {
-        let w = 0;
-        for (let i = 0; i < 6; i++) {
-            w += track.children[i].offsetWidth;
-            if (i < 5) w += parseInt(getComputedStyle(track.children[i]).marginRight);
-        }
-        return w;
-    }
-    // 填充足够多的图片组，保证track宽度大于等于容器宽度+一组，实现彻底无缝
-    function fillTrackAndGetWidth() {
-        while (track.children.length > 6) track.removeChild(track.lastChild);
-        const groupWidth = getGroupWidth();
-        const container = track.parentElement;
-        const containerWidth = container.offsetWidth;
-        let n = Math.ceil((containerWidth + groupWidth) / groupWidth);
-        for (let i = 1; i < n; i++) {
-            imgs.forEach(img => {
-                const clone = img.cloneNode(true);
-                track.appendChild(clone);
-            });
-        }
-        return groupWidth;
-    }
-    // 等待图片全部加载后再开始动画
-    let imagesLoaded = 0;
-    const allImgs = track.querySelectorAll('img');
-    allImgs.forEach(img => {
-        if (img.complete) imagesLoaded++;
-        else img.addEventListener('load', () => {
-            imagesLoaded++;
-            if (imagesLoaded === allImgs.length) startCarousel();
-        });
-    });
-    if (imagesLoaded === allImgs.length) startCarousel();
-    function startCarousel() {
-        let groupWidth = fillTrackAndGetWidth();
-        let pxPerSecond = 70; // 慢速
-        let pos = 0;
-        function updateWidth() {
-            groupWidth = fillTrackAndGetWidth();
-        }
-        window.addEventListener('resize', updateWidth);
-        let lastTime = performance.now();
-        let container = track.parentElement;
-        function animate(now) {
-            const delta = (now - lastTime) / 1000;
-            lastTime = now;
-            pos += pxPerSecond * delta;
-            const maxScroll = track.scrollWidth - container.offsetWidth;
-            if (pos >= maxScroll) {
-                pos = 0;
-                track.style.transition = 'none';
-                track.style.transform = `translateX(${-pos}px)`;
-                void track.offsetWidth;
-                track.style.transition = '';
-            } else {
-                track.style.transform = `translateX(${-pos}px)`;
-            }
-            requestAnimationFrame(animate);
-        }
-        requestAnimationFrame(animate);
-    }
-})(); 
-
 // 禁用所有照片的拖拽和右键功能
 (function() {
   document.addEventListener('DOMContentLoaded', function() {
@@ -607,3 +589,198 @@ function showToast(message) {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 } 
+
+// 页面加载动画和骨架屏
+window.addEventListener('DOMContentLoaded', function() {
+  // 创建loading遮罩
+  const loading = document.createElement('div');
+  loading.id = 'page-loading';
+  loading.style.position = 'fixed';
+  loading.style.left = 0;
+  loading.style.top = 0;
+  loading.style.width = '100vw';
+  loading.style.height = '100vh';
+  loading.style.background = 'rgba(245,247,250,0.96)';
+  loading.style.zIndex = 9999;
+  loading.style.display = 'flex';
+  loading.style.alignItems = 'center';
+  loading.style.justifyContent = 'center';
+  loading.innerHTML = '<div class="loader"></div>';
+  document.body.appendChild(loading);
+
+  // 骨架屏（可根据实际页面结构自定义）
+  // ...可扩展...
+
+  // loading动画样式
+  const style = document.createElement('style');
+  style.textContent = `
+    .loader {
+      border: 6px solid #e3e6ea;
+      border-top: 6px solid #4285f4;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body.fade-in { animation: fadeIn 0.7s; }
+    body.fade-out { animation: fadeOut 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    #back-to-top {
+      position: fixed; right: 24px; bottom: 32px; z-index: 9999;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #4285f4; color: #fff; border: none;
+      box-shadow: 0 2px 8px rgba(66,133,244,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; cursor: pointer; opacity: 0.7; transition: opacity 0.2s;
+      outline: none;
+    }
+    #back-to-top:hover { opacity: 1; background: #3367d6; }
+  `;
+  document.head.appendChild(style);
+
+  // 页面淡入
+  document.body.classList.add('fade-in');
+
+  // 页面加载完毕后移除loading
+  window.addEventListener('load', function() {
+    setTimeout(() => {
+      loading.style.opacity = 0;
+      setTimeout(() => loading.remove(), 400);
+    }, 300);
+  });
+
+  // 返回顶部按钮
+  const backToTop = document.createElement('button');
+  backToTop.id = 'back-to-top';
+  backToTop.title = '返回顶部';
+  backToTop.innerHTML = '<span class="material-icons">arrow_upward</span>';
+  document.body.appendChild(backToTop);
+  backToTop.style.display = 'none';
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 200) {
+      backToTop.style.display = 'flex';
+    } else {
+      backToTop.style.display = 'none';
+    }
+  });
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// 页面切换淡入淡出动画
+const links = document.querySelectorAll('a[href]');
+links.forEach(link => {
+  if (link.target === '_blank' || link.href.startsWith('mailto:')) return;
+  link.addEventListener('click', function(e) {
+    // 只处理站内链接
+    if (link.hostname === window.location.hostname) {
+      e.preventDefault();
+      document.body.classList.remove('fade-in');
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 350);
+    }
+  });
+});
+
+// 平滑滚动（已在CSS中设置html { scroll-behavior: smooth; }）
+
+// 移动端导航汉堡动画与自动关闭
+function initializeNavigation() {
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  console.log('navToggle:', navToggle);
+  console.log('navLinks:', navLinks);
+  if (navToggle && navLinks) {
+    let outsideClickHandler = null;
+    navToggle.addEventListener('click', function(e) {
+      console.log('nav-toggle clicked');
+      e.stopPropagation();
+      navLinks.classList.toggle('active');
+      navToggle.classList.toggle('open');
+      navToggle.querySelector('.material-icons').textContent = navLinks.classList.contains('active') ? 'close' : 'menu';
+      if (navLinks.classList.contains('active')) {
+        outsideClickHandler = function(event) {
+          if (!navToggle.contains(event.target) && !navLinks.contains(event.target)) {
+            navLinks.classList.remove('active');
+            navToggle.classList.remove('open');
+            navToggle.querySelector('.material-icons').textContent = 'menu';
+            document.removeEventListener('click', outsideClickHandler, true);
+          }
+        };
+        setTimeout(() => document.addEventListener('click', outsideClickHandler, true), 0);
+      } else {
+        if (outsideClickHandler) document.removeEventListener('click', outsideClickHandler, true);
+      }
+    });
+    navLinks.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navLinks.classList.remove('active');
+        navToggle.classList.remove('open');
+        navToggle.querySelector('.material-icons').textContent = 'menu';
+        if (outsideClickHandler) document.removeEventListener('click', outsideClickHandler, true);
+      });
+    });
+  } else {
+    console.error('navToggle or navLinks not found!');
+  }
+} 
+
+// Google Analytics 4 事件追踪
+function trackEvent(eventName, params) {
+  if (typeof gtag === 'function') {
+    gtag('event', eventName, params);
+  }
+}
+
+// 项目链接点击追踪
+function setupProjectLinkTracking() {
+  document.querySelectorAll('a.nav-link, .cta-button, .project-link, .project-card a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      trackEvent('project_link_click', {
+        link_text: link.textContent.trim(),
+        link_url: link.href || '',
+        page_location: window.location.pathname
+      });
+    });
+  });
+}
+
+// 联系表单提交追踪（如有form）
+function setupContactFormTracking() {
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      trackEvent('contact_form_submit', {
+        form_id: form.id || '',
+        page_location: window.location.pathname
+      });
+    });
+  });
+}
+
+// 用户交互事件追踪（如按钮点击）
+function setupInteractionTracking() {
+  document.querySelectorAll('button, .contact-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      trackEvent('user_interaction', {
+        button_text: btn.textContent.trim(),
+        button_class: btn.className,
+        page_location: window.location.pathname
+      });
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setupProjectLinkTracking();
+  setupContactFormTracking();
+  setupInteractionTracking();
+}); 
