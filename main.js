@@ -694,24 +694,36 @@ links.forEach(link => {
 
 // 移动端导航汉堡动画与自动关闭
 function initializeNavigation() {
+  console.log('initializeNavigation called');
   const navToggle = document.getElementById('nav-toggle');
   const navLinks = document.querySelector('.nav-links');
   console.log('navToggle:', navToggle);
   console.log('navLinks:', navLinks);
+  
   if (navToggle && navLinks) {
+    console.log('Both elements found, setting up event listeners');
     let outsideClickHandler = null;
+    
     navToggle.addEventListener('click', function(e) {
       console.log('nav-toggle clicked');
       e.stopPropagation();
       navLinks.classList.toggle('active');
       navToggle.classList.toggle('open');
-      navToggle.querySelector('.material-icons').textContent = navLinks.classList.contains('active') ? 'close' : 'menu';
+      const icon = navToggle.querySelector('.material-icons');
+      if (icon) {
+        icon.textContent = navLinks.classList.contains('active') ? 'close' : 'menu';
+      }
+      console.log('navLinks.classList.contains("active"):', navLinks.classList.contains('active'));
+      
       if (navLinks.classList.contains('active')) {
         outsideClickHandler = function(event) {
           if (!navToggle.contains(event.target) && !navLinks.contains(event.target)) {
             navLinks.classList.remove('active');
             navToggle.classList.remove('open');
-            navToggle.querySelector('.material-icons').textContent = 'menu';
+            const icon = navToggle.querySelector('.material-icons');
+            if (icon) {
+              icon.textContent = 'menu';
+            }
             document.removeEventListener('click', outsideClickHandler, true);
           }
         };
@@ -720,17 +732,24 @@ function initializeNavigation() {
         if (outsideClickHandler) document.removeEventListener('click', outsideClickHandler, true);
       }
     });
+    
     navLinks.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', function(e) {
+        console.log('nav-link clicked');
         e.stopPropagation();
         navLinks.classList.remove('active');
         navToggle.classList.remove('open');
-        navToggle.querySelector('.material-icons').textContent = 'menu';
+        const icon = navToggle.querySelector('.material-icons');
+        if (icon) {
+          icon.textContent = 'menu';
+        }
         if (outsideClickHandler) document.removeEventListener('click', outsideClickHandler, true);
       });
     });
   } else {
     console.error('navToggle or navLinks not found!');
+    console.error('navToggle:', navToggle);
+    console.error('navLinks:', navLinks);
   }
 } 
 
