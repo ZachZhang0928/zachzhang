@@ -783,4 +783,5 @@ document.addEventListener('DOMContentLoaded', function() {
   setupProjectLinkTracking();
   setupContactFormTracking();
   setupInteractionTracking();
+  initializeNavigation();
 }); 
