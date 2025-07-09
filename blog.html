@@ -37,60 +37,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Font Awesome CDN -->
-    <style>
-        /* 强制修复移动端导航 */
-        @media (max-width: 768px) {
-            .navbar .nav-links {
-                display: none !important;
-            }
-            
-            .navbar .nav-toggle {
-                display: block !important;
-            }
-            
-            .navbar .nav-links.active {
-                display: flex !important;
-                flex-direction: column !important;
-                position: absolute !important;
-                top: 100% !important;
-                left: 0 !important;
-                right: 0 !important;
-                background-color: var(--surface) !important;
-                border-top: 1px solid var(--border) !important;
-                padding: 1rem !important;
-                gap: 1rem !important;
-                z-index: 1000 !important;
-            }
-        }
-        
-        /* 确保返回顶部按钮正常显示 */
-        #back-to-top {
-            position: fixed !important;
-            right: 24px !important;
-            bottom: 32px !important;
-            z-index: 9999 !important;
-            width: 48px !important;
-            height: 48px !important;
-            border-radius: 50% !important;
-            background: #4285f4 !important;
-            color: #fff !important;
-            border: none !important;
-            box-shadow: 0 2px 8px rgba(66,133,244,0.18) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 2rem !important;
-            cursor: pointer !important;
-            opacity: 0.7 !important;
-            transition: opacity 0.2s !important;
-            outline: none !important;
-        }
-        
-        #back-to-top:hover {
-            opacity: 1 !important;
-            background: #3367d6 !important;
-        }
-    </style>
 </head>
 <body class="fade-in">
     <!-- 导航栏 -->
