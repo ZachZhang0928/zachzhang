@@ -642,6 +642,18 @@ window.addEventListener('DOMContentLoaded', function() {
     #back-to-top:hover { opacity: 1; background: #3367d6; }
   `;
   document.head.appendChild(style);
+  // 追加夜间模式loading样式
+  const darkStyle = document.createElement('style');
+  darkStyle.textContent = `
+    [data-theme="dark"] #loading {
+      background: #181c23 !important;
+    }
+    [data-theme="dark"] .loader {
+      border: 6px solid #333a44 !important;
+      border-top: 6px solid #5b9df9 !important;
+    }
+  `;
+  document.head.appendChild(darkStyle);
 
   // 页面淡入
   document.body.classList.add('fade-in');
@@ -673,7 +685,99 @@ window.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// 页面切换淡入淡出动画
+// ===== Loading 动画复用封装 =====
+// showLoading内部也加防抖，避免重复插入
+function showLoading() {
+  // 确保data-theme已同步设置，防止loading插入时闪白
+  if (!document.documentElement.getAttribute('data-theme')) {
+    try {
+      var theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch(e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }
+  if (window.__loadingShown) return;
+  window.__loadingShown = true;
+  document.body.classList.add('body--loading');
+  let loading = document.getElementById('loading');
+  if (!loading) {
+    loading = document.createElement('div');
+    loading.id = 'loading';
+    loading.style.position = 'fixed';
+    loading.style.top = 0;
+    loading.style.left = 0;
+    loading.style.width = '100vw';
+    loading.style.height = '100vh';
+    loading.style.display = 'flex';
+    loading.style.alignItems = 'center';
+    loading.style.justifyContent = 'center';
+    loading.style.zIndex = 99999;
+    // 骨架屏结构
+    loading.innerHTML = `
+      <div class="skeleton-wrapper">
+        <div class="skeleton skeleton-navbar"></div>
+        <div class="skeleton skeleton-breadcrumb"></div>
+        <div class="skeleton skeleton-header"></div>
+        <div class="skeleton skeleton-main"></div>
+        <div class="skeleton skeleton-sidebar"></div>
+        <div class="skeleton skeleton-footer"></div>
+        <div class="loader"></div>
+      </div>
+    `;
+    document.body.appendChild(loading);
+  } else {
+    loading.style.display = 'flex';
+    loading.style.opacity = 1;
+  }
+  // 骨架屏样式
+  if (!document.getElementById('skeleton-style')) {
+    const skeletonStyle = document.createElement('style');
+    skeletonStyle.id = 'skeleton-style';
+    skeletonStyle.textContent = `
+      .skeleton-wrapper { 
+        position: absolute; width: 100vw; height: 100vh; top: 0; left: 0; 
+        display: flex; align-items: center; justify-content: center; 
+        pointer-events: none; 
+      }
+      .skeleton {
+        background: #ececec; border-radius: 6px; opacity: 0.7; animation: skeleton-shine 1.2s infinite linear alternate;
+        position: absolute;
+      }
+      .skeleton-navbar { left: 5vw; top: 32px; width: 90vw; height: 48px; }
+      .skeleton-breadcrumb { left: 10vw; top: 88px; width: 80vw; height: 28px; border-radius: 8px; }
+      .skeleton-header { left: 20vw; top: 130px; width: 60vw; height: 32px; }
+      .skeleton-main { left: 10vw; top: 180px; width: 80vw; height: 180px; }
+      .skeleton-sidebar { left: 20vw; top: 380px; width: 60vw; height: 80px; }
+      .skeleton-footer { left: 5vw; bottom: 32px; width: 90vw; height: 32px; }
+      .loader { position: relative; z-index: 2; }
+      @keyframes skeleton-shine {
+        0% { filter: brightness(1); }
+        100% { filter: brightness(1.15); }
+      }
+      [data-theme="dark"] .skeleton { background: #23272f; }
+      .body--loading > *:not(#loading) { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.4s; }
+      body:not(.body--loading) > *:not(#loading) { opacity: 1 !important; pointer-events: auto !important; transition: opacity 0.4s; }
+    `;
+    document.head.appendChild(skeletonStyle);
+  }
+}
+function hideLoading() {
+  window.__loadingShown = false;
+  const loading = document.getElementById('loading');
+  if (loading) {
+    loading.style.opacity = 0;
+    setTimeout(() => {
+      loading.style.display = 'none';
+      document.body.classList.remove('body--loading');
+      // 移除骨架屏样式
+      const skeletonStyle = document.getElementById('skeleton-style');
+      if (skeletonStyle) skeletonStyle.remove();
+    }, 400);
+  }
+}
+
+// ===== 页面切换淡入淡出动画 + loading（仅跳转时显示） =====
 const links = document.querySelectorAll('a[href]');
 links.forEach(link => {
   if (link.target === '_blank' || link.href.startsWith('mailto:')) return;
@@ -681,6 +785,11 @@ links.forEach(link => {
     // 只处理站内链接
     if (link.hostname === window.location.hostname) {
       e.preventDefault();
+      // 防抖：只在未显示loading时插入
+      if (!window.__loadingShown) {
+        window.__loadingShown = true;
+        showLoading();
+      }
       document.body.classList.remove('fade-in');
       document.body.classList.add('fade-out');
       setTimeout(() => {
@@ -690,7 +799,122 @@ links.forEach(link => {
   });
 });
 
-// 平滑滚动（已在CSS中设置html { scroll-behavior: smooth; }）
+// ===== 首次加载时不自动显示/隐藏 loading =====
+// 移除window.onload和DOMContentLoaded相关的loading逻辑
+// 保证新页面加载后直接显示内容
+
+// showLoading内部也加防抖，避免重复插入
+function showLoading() {
+  // 确保data-theme已同步设置，防止loading插入时闪白
+  if (!document.documentElement.getAttribute('data-theme')) {
+    try {
+      var theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch(e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }
+  if (window.__loadingShown) return;
+  window.__loadingShown = true;
+  document.body.classList.add('body--loading');
+  let loading = document.getElementById('loading');
+  if (!loading) {
+    loading = document.createElement('div');
+    loading.id = 'loading';
+    loading.style.position = 'fixed';
+    loading.style.top = 0;
+    loading.style.left = 0;
+    loading.style.width = '100vw';
+    loading.style.height = '100vh';
+    loading.style.display = 'flex';
+    loading.style.alignItems = 'center';
+    loading.style.justifyContent = 'center';
+    loading.style.zIndex = 99999;
+    // 骨架屏结构
+    loading.innerHTML = `
+      <div class="skeleton-wrapper">
+        <div class="skeleton skeleton-navbar"></div>
+        <div class="skeleton skeleton-breadcrumb"></div>
+        <div class="skeleton skeleton-header"></div>
+        <div class="skeleton skeleton-main"></div>
+        <div class="skeleton skeleton-sidebar"></div>
+        <div class="skeleton skeleton-footer"></div>
+        <div class="loader"></div>
+      </div>
+    `;
+    document.body.appendChild(loading);
+  } else {
+    loading.style.display = 'flex';
+    loading.style.opacity = 1;
+  }
+  // 骨架屏样式
+  if (!document.getElementById('skeleton-style')) {
+    const skeletonStyle = document.createElement('style');
+    skeletonStyle.id = 'skeleton-style';
+    skeletonStyle.textContent = `
+      .skeleton-wrapper { 
+        position: absolute; width: 100vw; height: 100vh; top: 0; left: 0; 
+        display: flex; align-items: center; justify-content: center; 
+        pointer-events: none; 
+      }
+      .skeleton {
+        background: #ececec; border-radius: 6px; opacity: 0.7; animation: skeleton-shine 1.2s infinite linear alternate;
+        position: absolute;
+      }
+      .skeleton-navbar { left: 5vw; top: 32px; width: 90vw; height: 48px; }
+      .skeleton-breadcrumb { left: 10vw; top: 88px; width: 80vw; height: 28px; border-radius: 8px; }
+      .skeleton-header { left: 20vw; top: 130px; width: 60vw; height: 32px; }
+      .skeleton-main { left: 10vw; top: 180px; width: 80vw; height: 180px; }
+      .skeleton-sidebar { left: 20vw; top: 380px; width: 60vw; height: 80px; }
+      .skeleton-footer { left: 5vw; bottom: 32px; width: 90vw; height: 32px; }
+      .loader { position: relative; z-index: 2; }
+      @keyframes skeleton-shine {
+        0% { filter: brightness(1); }
+        100% { filter: brightness(1.15); }
+      }
+      [data-theme="dark"] .skeleton { background: #23272f; }
+      .body--loading > *:not(#loading) { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.4s; }
+      body:not(.body--loading) > *:not(#loading) { opacity: 1 !important; pointer-events: auto !important; transition: opacity 0.4s; }
+    `;
+    document.head.appendChild(skeletonStyle);
+  }
+}
+function hideLoading() {
+  window.__loadingShown = false;
+  const loading = document.getElementById('loading');
+  if (loading) {
+    loading.style.opacity = 0;
+    setTimeout(() => {
+      loading.style.display = 'none';
+      document.body.classList.remove('body--loading');
+      // 移除骨架屏样式
+      const skeletonStyle = document.getElementById('skeleton-style');
+      if (skeletonStyle) skeletonStyle.remove();
+    }, 400);
+  }
+}
+
+// ===== 预取下一个页面（导航悬停） =====
+const prefetchCache = {};
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('mouseenter', function() {
+    const url = link.getAttribute('href');
+    if (!url || prefetchCache[url]) return;
+    // 只预取本地/本站页面
+    if (url.startsWith('http') && !url.includes(window.location.hostname)) return;
+    fetch(url, { method: 'GET' })
+      .then(res => res.text())
+      .then(html => { prefetchCache[url] = html; })
+      .catch(() => {});
+  });
+});
+
+// ===== 首次加载时自动隐藏 loading =====
+// window.addEventListener('load', function() {
+//   setTimeout(() => {
+//     hideLoading();
+//   }, 300);
+// });
 
 // 移动端导航汉堡动画与自动关闭
 function initializeNavigation() {
@@ -804,3 +1028,10 @@ document.addEventListener('DOMContentLoaded', function() {
   setupInteractionTracking();
   initializeNavigation();
 }); 
+
+// 兜底：如果DOMContentLoaded后导航事件没绑定，强制绑定一次
+setTimeout(() => {
+  if (typeof initializeNavigation === 'function') {
+    initializeNavigation();
+  }
+}, 1000); 

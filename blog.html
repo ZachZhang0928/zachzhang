@@ -31,14 +31,86 @@
         document.documentElement.setAttribute('data-theme', savedTheme);
     })();
     </script>
+    <script>
+      // 立即同步设置主题，防止闪白
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme') || 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch(e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+      [data-theme="dark"] html,
+      [data-theme="dark"] body,
+      [data-theme="dark"] #loading,
+      [data-theme="dark"] .skeleton-wrapper {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .loader {
+        border: 6px solid #333a44 !important;
+        border-top: 6px solid #5b9df9 !important;
+      }
+      [data-theme="dark"] .breadcrumb {
+        background: #23272f !important;
+        color: #aaa !important;
+      }
+      [data-theme="dark"] .breadcrumb-separator {
+        color: #5b9df9 !important;
+      }
+      [data-theme="dark"] .breadcrumb-link {
+        color: #5b9df9 !important;
+      }
+      [data-theme="dark"] .breadcrumb-current {
+        color: #aaa !important;
+      }
+      .breadcrumb {
+        background: #fff;
+        color: #444;
+        transition: background 0.3s, color 0.3s;
+      }
+      .breadcrumb-separator {
+        color: #4285f4;
+      }
+      .breadcrumb-link {
+        color: #4285f4;
+      }
+      .breadcrumb-current {
+        color: #888;
+      }
+      [data-theme="dark"] .blog-container {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .blog-header,
+      [data-theme="dark"] .blog-post,
+      [data-theme="dark"] .blog-sidebar {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .blog-content,
+      [data-theme="dark"] header,
+      [data-theme="dark"] .navbar {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .blog-post {
+        background: #23272f !important;
+      }
+      [data-theme="dark"] .projects-container {
+        background: #181c23 !important;
+      }
+      .blog-mini-card {
+        height: 200px !important; /* Force a smaller height for mini cards */
+      }
+    </style>
     <!-- Font Awesome CDN -->
 </head>
-<body class="fade-in">
+<body class="fade-in blog-page">
     <!-- 导航栏 -->
     <nav class="navbar">
         <a href="index.html" class="nav-brand" id="nav-logo">Zach's Portfolio</a>
@@ -63,190 +135,72 @@
     </nav>
 
     <!-- 主要内容区域 -->
-    <main class="blog-container">
-        <header class="blog-header">
-            <h1>Blog</h1>
-            <p>Thoughts on machine learning, AI research, and software engineering</p>
-        </header>
-
-        <section class="blog-content">
-            <!-- 博客文章1 -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <h2>Neural Network Compression: A Deep Dive into Model Optimization</h2>
-                    <div class="post-meta">
-                        <span class="post-date">December 15, 2024</span>
-                    </div>
-                </div>
-                <div class="post-excerpt">
-                    <p>
-                        Exploring advanced techniques for neural network compression and their impact on model deployment. 
-                        This research focuses on quantization, pruning, and knowledge distillation methods that can reduce 
-                        model size by up to 70% while maintaining performance.
-                    </p>
-                </div>
-                <div class="post-tags">
-                    <span class="tag">PyTorch</span>
-                    <span class="tag">Model Compression</span>
-                    <span class="tag">Quantization</span>
-                    <span class="tag">Research</span>
-                </div>
-            </article>
-
-            <!-- 博客文章2 -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <h2>Building Scalable Recommendation Systems with Deep Learning</h2>
-                    <div class="post-meta">
-                        <span class="post-date">November 28, 2024</span>
-                    </div>
-                </div>
-                <div class="post-excerpt">
-                    <p>
-                        A comprehensive guide to implementing production-ready recommendation systems using 
-                        neural collaborative filtering. Learn about architecture design, performance optimization, 
-                        and real-world deployment challenges.
-                    </p>
-                </div>
-                <div class="post-tags">
-                    <span class="tag">TensorFlow</span>
-                    <span class="tag">Recommendation Systems</span>
-                    <span class="tag">Deep Learning</span>
-                    <span class="tag">Production</span>
-                </div>
-            </article>
-
-            <!-- 博客文章3 -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <h2>Transformer-Based Code Completion: From Research to Practice</h2>
-                    <div class="post-meta">
-                        <span class="post-date">November 10, 2024</span>
-                    </div>
-                </div>
-                <div class="post-excerpt">
-                    <p>
-                        Implementing intelligent code completion using transformer models. This post covers 
-                        the development of a code assistant that achieves 85% accuracy across multiple 
-                        programming languages using few-shot learning techniques.
-                    </p>
-                </div>
-                <div class="post-tags">
-                    <span class="tag">Transformers</span>
-                    <span class="tag">Code Completion</span>
-                    <span class="tag">BERT</span>
-                    <span class="tag">Few-shot Learning</span>
-                </div>
-            </article>
-
-            <!-- 博客文章4 -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <h2>Real-time AI Chat Systems: Architecture and Implementation</h2>
-                    <div class="post-meta">
-                        <span class="post-date">October 25, 2024</span>
-                    </div>
-                </div>
-                <div class="post-excerpt">
-                    <p>
-                        Building high-performance conversational AI systems that can handle thousands of 
-                        concurrent users with sub-50ms latency. This post explores WebSocket architecture, 
-                        emotion recognition, and scaling strategies.
-                    </p>
-                </div>
-                <div class="post-tags">
-                    <span class="tag">WebSocket</span>
-                    <span class="tag">Real-time</span>
-                    <span class="tag">NLP</span>
-                    <span class="tag">Scalability</span>
-                </div>
-            </article>
-
-            <!-- 博客文章5 -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <h2>Machine Learning Model Deployment: Best Practices and Lessons Learned</h2>
-                    <div class="post-meta">
-                        <span class="post-date">October 12, 2024</span>
-                    </div>
-                </div>
-                <div class="post-excerpt">
-                    <p>
-                        From research to production: A practical guide to deploying machine learning models 
-                        at scale. Covering containerization, monitoring, A/B testing, and continuous 
-                        integration strategies.
-                    </p>
-                </div>
-                <div class="post-tags">
-                    <span class="tag">Docker</span>
-                    <span class="tag">AWS</span>
-                    <span class="tag">MLflow</span>
-                    <span class="tag">Deployment</span>
-                </div>
-            </article>
-
-            <!-- 博客文章6 -->
-            <article class="blog-post">
-                <div class="post-header">
-                    <h2>The Future of AI-Assisted Programming: Trends and Predictions</h2>
-                    <div class="post-meta">
-                        <span class="post-date">September 30, 2024</span>
-                    </div>
-                </div>
-                <div class="post-excerpt">
-                    <p>
-                        Exploring emerging trends in AI-assisted programming and their potential impact on 
-                        software development. From code generation to automated testing, discover how AI 
-                        is reshaping the developer experience.
-                    </p>
-                </div>
-                <div class="post-tags">
-                    <span class="tag">AI</span>
-                    <span class="tag">Programming</span>
-                    <span class="tag">Future</span>
-                    <span class="tag">Trends</span>
-                </div>
-            </article>
-        </section>
-
-        <aside class="blog-sidebar">
-            <div class="sidebar-section">
-                <h3>Categories</h3>
-                <ul class="category-list">
-                    <li><a href="#" class="category-link">Research (3)</a></li>
-                    <li><a href="#" class="category-link">Engineering (2)</a></li>
-                    <li><a href="#" class="category-link">AI/ML (4)</a></li>
-                    <li><a href="#" class="category-link">Real-time (1)</a></li>
-                    <li><a href="#" class="category-link">DevOps (1)</a></li>
-                    <li><a href="#" class="category-link">Future (1)</a></li>
-                </ul>
-            </div>
-
-            <div class="sidebar-section">
-                <h3>Popular Tags</h3>
-                <div class="tag-cloud">
-                    <span class="tag">PyTorch</span>
-                    <span class="tag">TensorFlow</span>
-                    <span class="tag">Deep Learning</span>
-                    <span class="tag">Transformers</span>
-                    <span class="tag">Recommendation Systems</span>
-                    <span class="tag">Code Completion</span>
-                    <span class="tag">Real-time</span>
-                    <span class="tag">Docker</span>
-                    <span class="tag">AWS</span>
-                    <span class="tag">NLP</span>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <h3>Subscribe</h3>
-                <p>Get notified when I publish new articles about ML and AI.</p>
-                <form class="subscribe-form">
-                    <input type="email" placeholder="Enter your email" class="subscribe-input">
-                    <button type="submit" class="subscribe-btn">Subscribe</button>
-                </form>
-            </div>
-        </aside>
+    <main class="projects-container">
+      <header class="projects-header">
+        <h1>My Blog</h1>
+        <p>Thoughts on machine learning, AI research, and software engineering</p>
+      </header>
+      <section class="blog-content">
+        <!-- 博客文章已移除，仅保留空结构 -->
+      </section>
+      <aside class="blog-sidebar">
+        <div class="project-card blog-mini-card">
+          <h2 class="project-title">Neural Network Optimization Suite</h2>
+          <p class="project-description">Advanced ML Model Compression & Acceleration Research at NC State University. Developed innovative techniques for model optimization and deployment.</p>
+          <div class="project-tech">
+            <span class="tech-tag">PyTorch</span>
+            <span class="tech-tag">TensorFlow</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">Docker</span>
+            <span class="tech-tag">AWS</span>
+            <span class="tech-tag">MLflow</span>
+          </div>
+        </div>
+        <div class="project-card blog-mini-card">
+          <h2 class="project-title">Smart Recommendation Engine</h2>
+          <p class="project-description">Large-scale deep learning recommendation system with Neural Collaborative Filtering. Designed for high-performance, real-time recommendations.</p>
+          <div class="project-tech">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">TensorFlow</span>
+            <span class="tech-tag">Django</span>
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">PostgreSQL</span>
+            <span class="tech-tag">Redis</span>
+          </div>
+        </div>
+        <div class="project-card blog-mini-card">
+          <h2 class="project-title">AI Code Assistant Platform</h2>
+          <p class="project-description">Transformer-based intelligent code completion system with few-shot learning capabilities. Supports multiple programming languages and frameworks.</p>
+          <div class="project-tech">
+            <span class="tech-tag">Transformers</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">Vue.js</span>
+            <span class="tech-tag">Redis</span>
+            <span class="tech-tag">BERT</span>
+            <span class="tech-tag">CodeT5</span>
+          </div>
+        </div>
+        <div class="project-card blog-mini-card">
+          <h2 class="project-title">Real-time AI Chat System</h2>
+          <p class="project-description">Multi-modal conversational AI system with emotion recognition and real-time processing. Built for high-concurrency, low-latency communication.</p>
+          <div class="project-tech">
+            <span class="tech-tag">WebSocket</span>
+            <span class="tech-tag">OpenAI API</span>
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">MongoDB</span>
+            <span class="tech-tag">NLP</span>
+            <span class="tech-tag">Redis</span>
+          </div>
+        </div>
+        <div class="sidebar-section">
+          <h3>Subscribe</h3>
+          <p>Get notified when I publish new articles about ML and AI.</p>
+          <form class="subscribe-form">
+            <input type="email" placeholder="Enter your email" class="subscribe-input">
+            <button type="submit" class="subscribe-btn">Subscribe</button>
+          </form>
+        </div>
+      </aside>
     </main>
 
     <script src="main.js"></script>

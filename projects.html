@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +7,80 @@
     <meta name="description" content="Machine Learning and AI projects by Zach Zhang - CS Student & ML Researcher">
     <!-- 主题预加载脚本 - 防止页面跳转时的频闪 -->
     <script>
-    (function() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme') || 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch(e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
     </script>
+    <style>
+      html, body { background: #fff; }
+      [data-theme="dark"] html, [data-theme="dark"] body,
+      [data-theme="dark"] #loading, [data-theme="dark"] .skeleton-wrapper {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .loader {
+        border: 6px solid #333a44 !important;
+        border-top: 6px solid #5b9df9 !important;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+      [data-theme="dark"] html,
+      [data-theme="dark"] body,
+      [data-theme="dark"] #loading,
+      [data-theme="dark"] .skeleton-wrapper {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .loader {
+        border: 6px solid #333a44 !important;
+        border-top: 6px solid #5b9df9 !important;
+      }
+      [data-theme="dark"] .breadcrumb {
+        background: #23272f !important;
+        color: #aaa !important;
+      }
+      [data-theme="dark"] .breadcrumb-separator {
+        color: #5b9df9 !important;
+      }
+      [data-theme="dark"] .breadcrumb-link {
+        color: #5b9df9 !important;
+      }
+      [data-theme="dark"] .breadcrumb-current {
+        color: #aaa !important;
+      }
+      .breadcrumb {
+        background: #fff;
+        color: #444;
+        transition: background 0.3s, color 0.3s;
+      }
+      .breadcrumb-separator {
+        color: #4285f4;
+      }
+      .breadcrumb-link {
+        color: #4285f4;
+      }
+      .breadcrumb-current {
+        color: #888;
+      }
+      [data-theme="dark"] .projects-grid {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] header,
+      [data-theme="dark"] .navbar {
+        background: #181c23 !important;
+      }
+      [data-theme="dark"] .projects-container {
+        background: #181c23 !important;
+      }
+    </style>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
