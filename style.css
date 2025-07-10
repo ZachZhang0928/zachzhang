@@ -217,6 +217,19 @@ body::after, body::before {
   filter: invert(1) brightness(0.9); /* 反色并稍微降低亮度 */
 }
 
+/* 移动端签名尺寸优化 */
+@media (max-width: 768px) {
+  .nav-brand img {
+    max-height: 45px; /* 平板尺寸稍小 */
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand img {
+    max-height: 35px; /* 手机尺寸更小 */
+  }
+}
+
 .nav-brand:hover, .nav-brand:focus {
   color: var(--google-blue);
   text-decoration: none;
