@@ -490,6 +490,70 @@ body::after, body::before {
     filter: brightness(1.2) saturate(1.1);
 }
 
+/* 座右铭样式 */
+.hero-motto {
+    font-family: 'Google Sans', Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(95, 99, 104, 0.85);
+    margin: 8px 0 20px 0;
+    text-align: center;
+    line-height: 1.5;
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 5;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeInMotto 1.2s ease-out 0.5s both;
+}
+
+.hero-motto em {
+    font-style: italic;
+    position: relative;
+}
+
+.hero-motto::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -8px;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(95, 99, 104, 0.3), transparent);
+    opacity: 0.6;
+}
+
+.hero-motto:hover {
+    color: rgba(66, 133, 244, 0.9);
+    transform: translateY(-1px);
+}
+
+/* 暗色主题的座右铭 */
+[data-theme="dark"] .hero-motto {
+    color: rgba(218, 220, 224, 0.75);
+}
+
+[data-theme="dark"] .hero-motto::before {
+    background: linear-gradient(90deg, transparent, rgba(218, 220, 224, 0.25), transparent);
+}
+
+[data-theme="dark"] .hero-motto:hover {
+    color: rgba(138, 180, 248, 0.9);
+}
+
+/* 座右铭淡入动画 */
+@keyframes fadeInMotto {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Google Doodle Name (保留以防其他页面使用) */
 .google-doodle-name {
     font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -793,6 +857,12 @@ body::after, body::before {
         font-size: 2.8rem;
     }
     
+    .hero-motto {
+        font-size: 1rem;
+        margin: 6px 0 16px 0;
+        letter-spacing: 0.2px;
+    }
+    
     .google-doodle-name {
         font-size: 2.8rem;
     }
@@ -822,6 +892,13 @@ body::after, body::before {
     
     .apple-greeting {
         font-size: 2.2rem;
+    }
+    
+    .hero-motto {
+        font-size: 0.9rem;
+        margin: 4px 0 12px 0;
+        letter-spacing: 0.1px;
+        padding: 0 16px;
     }
     
     .google-doodle-name {
