@@ -192,7 +192,31 @@ body::after, body::before {
   font-weight: 500;
   transition: color 0.2s;
   cursor: pointer;
+  /* Logo容器样式 - 填满header高度 */
+  display: flex;
+  align-items: center;
+  height: 100%; /* 占满navbar的高度 */
+  padding-left: 20px; /* logo与左边缘的距离 */
 }
+
+/* Logo图片样式 - 填满header高度 */
+.nav-brand img {
+  height: 100%; /* 图片高度填满整个header */
+  width: auto; /* 保持宽高比，不变形 */
+  max-height: 60px; /* 设置最大高度与header一致 */
+  transition: all 0.2s ease;
+  object-fit: contain; /* 避免变形 */
+}
+
+.nav-brand:hover img {
+  transform: scale(1.05);
+}
+
+/* 深色主题下的logo优化 */
+[data-theme="dark"] .nav-brand img {
+  filter: invert(1) brightness(0.9); /* 反色并稍微降低亮度 */
+}
+
 .nav-brand:hover, .nav-brand:focus {
   color: var(--google-blue);
   text-decoration: none;
@@ -399,7 +423,74 @@ body::after, body::before {
     to { transform: rotate(360deg); }
 }
 
-/* Google Doodle Name */
+/* Apple Style Greeting */
+.apple-greeting {
+    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 4.2rem;
+    font-weight: 600;
+    margin: 20px 0 15px 0;
+    z-index: 10;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.05;
+    text-align: center;
+    display: block;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.greeting-text {
+    background: linear-gradient(90deg, 
+        #4285f4 0%, 
+        #34a853 12%, 
+        #fbbc04 25%, 
+        #ea4335 37%, 
+        #9c27b0 50%, 
+        #673ab7 62%, 
+        #2196f3 75%, 
+        #00bcd4 87%, 
+        #4285f4 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 8s ease-in-out infinite;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    letter-spacing: -0.02em;
+}
+
+.apple-greeting:hover .greeting-text {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+.apple-greeting:active .greeting-text {
+    transform: scale(0.98);
+    transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 暗色主题支持 */
+[data-theme="dark"] .apple-greeting:hover .greeting-text {
+    filter: brightness(1.2) saturate(1.1);
+}
+
+/* Google Doodle Name (保留以防其他页面使用) */
 .google-doodle-name {
     font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 3.5rem;
@@ -698,6 +789,10 @@ body::after, body::before {
         height: 140px;
     }
     
+    .apple-greeting {
+        font-size: 2.8rem;
+    }
+    
     .google-doodle-name {
         font-size: 2.8rem;
     }
@@ -723,6 +818,10 @@ body::after, body::before {
     .avatar-container {
         width: 120px;
         height: 120px;
+    }
+    
+    .apple-greeting {
+        font-size: 2.2rem;
     }
     
     .google-doodle-name {
