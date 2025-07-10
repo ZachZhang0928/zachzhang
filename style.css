@@ -238,10 +238,64 @@ body::after, body::before {
     transition: all 0.3s ease;
 }
 
-.theme-toggle:hover {
-    background-color: var(--border);
-    color: var(--text-primary);
-}
+  .theme-toggle:hover {
+      background-color: var(--border);
+      color: var(--text-primary);
+      transform: scale(1.1);
+  }
+  
+  /* 主题切换按钮动效增强 */
+  .theme-toggle .material-icons {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+  }
+  
+  /* 主题切换时的旋转动效 */
+  .theme-toggle.switching .material-icons {
+      transform: rotate(180deg) scale(1.2);
+  }
+  
+  /* 涟漪效果 */
+  .theme-toggle::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: var(--google-blue);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      z-index: -1;
+  }
+  
+  .theme-toggle.switching::before {
+      width: 60px;
+      height: 60px;
+      opacity: 0.1;
+  }
+  
+  .theme-toggle.switched {
+      animation: themeSuccess 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* 成功反馈动画 */
+  @keyframes themeSuccess {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+  }
+  
+  /* 图标颜色优化 - 太阳橙色，月亮灰色 */
+  [data-theme="light"] .theme-toggle .material-icons {
+      color: #fbbf24; /* 太阳橙色 */
+  }
+  
+  [data-theme="dark"] .theme-toggle .material-icons {
+      color: #64748b; /* 月亮灰色 */
+  }
 
 .nav-toggle {
     display: none;
@@ -9232,7 +9286,7 @@ button[onclick*="viewDetails"] {
 [data-theme="dark"] .navbar .nav-brand:hover,
 [data-theme="dark"] .navbar .nav-brand:focus {
   color: #5b9df9 !important;
-}.navbar
+}
 
 [data-theme="dark"] .blog-card,
 [data-theme="dark"] .sidebar-section,
@@ -9438,4 +9492,871 @@ button[onclick*="viewDetails"] {
   background: #23272f !important;
   box-shadow: none !important;
   background-image: none !important;
+}
+/* ===== 移动端导航展开动画优化 - Google Material Design风格 ===== */
+@media (max-width: 768px) {
+    /* 基础移动端导航样式重置 */
+    .nav-links {
+        /* 移除原有的display: none，改为始终显示但位置控制 */
+        display: flex !important;
+        flex-direction: column;
+        position: fixed;
+        top: 70px; /* 导航栏高度 */
+        left: 0;
+        right: 0;
+        background: rgba(248, 249, 250, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(218, 220, 224, 0.3);
+        padding: 0;
+        gap: 0;
+        z-index: 999;
+        max-height: 0;
+        overflow: hidden;
+        /* Material Design标准动画 */
+        transition: all 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
+        /* 顶部滑出效果 */
+        transform: translateY(-100%);
+        opacity: 0;
+        box-shadow: 0 2px 16px rgba(60, 64, 67, 0.1);
+    }
+    
+    /* 展开状态 */
+    .nav-links.active {
+        max-height: 400px;
+        transform: translateY(0);
+        opacity: 1;
+        padding: 1rem 0;
+    }
+    
+    /* 导航项目样式 */
+    .nav-links .nav-link {
+        padding: 16px 24px;
+        margin: 0;
+        border-bottom: 1px solid rgba(218, 220, 224, 0.2);
+        color: var(--text-primary);
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    
+    /* 主题切换按钮样式 */
+    .nav-links .theme-toggle {
+        margin: 8px 24px;
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(66, 133, 244, 0.08);
+        border: 1px solid rgba(66, 133, 244, 0.2);
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    
+    /* 展开时的渐进动画 */
+    .nav-links.active .nav-link:nth-child(1) {
+        animation: slideInFromTop 0.35s cubic-bezier(0.4, 0.0, 0.2, 1) 0.1s forwards;
+    }
+    .nav-links.active .nav-link:nth-child(2) {
+        animation: slideInFromTop 0.35s cubic-bezier(0.4, 0.0, 0.2, 1) 0.15s forwards;
+    }
+    .nav-links.active .nav-link:nth-child(3) {
+        animation: slideInFromTop 0.35s cubic-bezier(0.4, 0.0, 0.2, 1) 0.2s forwards;
+    }
+    .nav-links.active .nav-link:nth-child(4) {
+        animation: slideInFromTop 0.35s cubic-bezier(0.4, 0.0, 0.2, 1) 0.25s forwards;
+    }
+    .nav-links.active .theme-toggle {
+        animation: slideInFromTop 0.35s cubic-bezier(0.4, 0.0, 0.2, 1) 0.3s forwards;
+    }
+    
+    /* 悬停效果 */
+    .nav-links .nav-link:hover {
+        background: rgba(66, 133, 244, 0.08);
+        color: var(--google-blue);
+        transform: translateX(4px);
+    }
+    
+    /* 汉堡菜单按钮旋转动画 */
+    .nav-toggle {
+        transition: transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    
+    .nav-toggle.open {
+        transform: rotate(180deg);
+    }
+    
+    /* 暗黑主题适配 */
+    [data-theme="dark"] .nav-links {
+        background: rgba(48, 49, 52, 0.95);
+        border-top: 1px solid rgba(95, 99, 104, 0.3);
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    [data-theme="dark"] .nav-links .nav-link {
+        border-bottom: 1px solid rgba(95, 99, 104, 0.2);
+        color: var(--text-primary);
+    }
+    
+    [data-theme="dark"] .nav-links .nav-link:hover {
+        background: rgba(91, 157, 249, 0.12);
+        color: var(--google-blue);
+    }
+    
+    [data-theme="dark"] .nav-links .theme-toggle {
+        background: rgba(91, 157, 249, 0.12);
+        border: 1px solid rgba(91, 157, 249, 0.3);
+    }
+}
+
+/* 滑入动画关键帧 */
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 确保在桌面端隐藏移动端样式 */
+@media (min-width: 769px) {
+    .nav-links {
+        /* 重置移动端样式 */
+        position: static !important;
+        transform: none !important;
+        opacity: 1 !important;
+        max-height: none !important;
+        background: none !important;
+        backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        flex-direction: row !important;
+        gap: 2rem !important;
+    }
+    
+    .nav-links .nav-link {
+        transform: none !important;
+        opacity: 1 !important;
+        padding: 0 !important;
+        border: none !important;
+        margin: 0 !important;
+    }
+    
+    .nav-toggle.open {
+        transform: none !important;
+    }
+}
+
+/* 移动端主题切换按钮与导航项样式统一 - 去除边框 */
+@media (max-width: 768px) {
+    /* 主题切换按钮与导航项保持一致的样式 */
+    .nav-links .theme-toggle {
+        margin: 0 !important;
+        padding: 16px 24px !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(218, 220, 224, 0.2) !important;
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+        color: var(--text-primary) !important;
+        font-weight: 500 !important;
+    }
+    
+    /* 主题切换按钮悬停效果与导航项一致 */
+    .nav-links .theme-toggle:hover {
+        background: rgba(66, 133, 244, 0.08) !important;
+        color: var(--google-blue) !important;
+        transform: translateX(4px) !important;
+    }
+    
+    /* 暗黑主题下的统一样式 */
+    [data-theme="dark"] .nav-links .theme-toggle {
+        background: transparent !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(95, 99, 104, 0.2) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    [data-theme="dark"] .nav-links .theme-toggle:hover {
+        background: rgba(91, 157, 249, 0.12) !important;
+        color: var(--google-blue) !important;
+    }
+}
+
+/* ===== 移动端空白区域修复 ===== */
+@media (max-width: 768px) {
+    /* 重置移动端页面高度控制 */
+    html, body {
+        min-height: 100vh !important;
+        height: auto !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* 移动端主页布局优化 */
+    .hero-section {
+        min-height: calc(100vh - 140px) !important; /* 减去导航栏和footer高度 */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 40px 20px 60px 20px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Footer固定在底部 */
+    .site-footer {
+        position: relative !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        margin-top: auto !important;
+    }
+    
+    /* 确保body使用flexbox布局 */
+    body {
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 100vh !important;
+    }
+    
+    /* 主内容区域自动填充剩余空间 */
+    .hero-section {
+        flex: 1 !important;
+    }
+}
+
+/* 防止水平滚动条 */
+@media (max-width: 768px) {
+    body, html {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    
+    /* 确保所有元素不超出视口宽度 */
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 画廊容器特殊处理 */
+    .material-carousel-container {
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+    }
+}
+
+/* ===== 移动端Hero Section高度优化 - 更紧凑的布局 ===== */
+@media (max-width: 768px) {
+    /* 调整Hero Section为更紧凑的高度 */
+    .hero-section {
+        min-height: 80vh !important; /* 从calc(100vh - 140px)调整为80vh，更紧凑 */
+        max-height: 85vh !important; /* 添加最大高度限制 */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 30px 20px 40px 20px !important; /* 减少padding */
+        box-sizing: border-box !important;
+    }
+    
+    /* 确保内容区域更紧凑 */
+    .hero-section .google-doodle-name {
+        margin-bottom: 16px !important; /* 减少名字下方间距 */
+    }
+    
+    .hero-section .hero-subtitle,
+    .hero-section .hero-description {
+        margin-bottom: 12px !important; /* 减少描述文字间距 */
+    }
+    
+    .hero-section .material-carousel-container {
+        margin-bottom: 20px !important; /* 减少画廊下方间距 */
+    }
+    
+    .hero-section .cta-button {
+        margin-top: 16px !important; /* 减少按钮上方间距 */
+    }
+}
+
+/* 小屏幕进一步优化 */
+@media (max-width: 480px) {
+    .hero-section {
+        min-height: 75vh !important; /* 小屏幕进一步减少高度 */
+        max-height: 80vh !important;
+        padding: 20px 16px 30px 16px !important; /* 进一步减少padding */
+    }
+}
+
+/* ===== 移动端画廊固定正方形尺寸 ===== */
+@media (max-width: 768px) {
+    /* 移动端画廊图片设置为固定正方形，长宽取最大值300px */
+    .material-carousel-img {
+        width: 300px !important;
+        height: 300px !important;
+        min-width: 300px !important;
+        max-width: 300px !important;
+        min-height: 300px !important;
+        max-height: 300px !important;
+        border-radius: 20px !important;
+        margin-right: 16px !important;
+        margin-bottom: 0 !important;
+        object-fit: cover !important;
+        display: block !important;
+        box-shadow: 0 4px 12px rgba(60, 64, 67, 0.15), 0 2px 6px rgba(60, 64, 67, 0.1) !important;
+        background: #f8f9fa !important;
+        transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    }
+    
+    /* 画廊容器适配固定尺寸 */
+    .material-carousel-container {
+        height: 320px !important;
+        min-height: 320px !important;
+        margin-top: 12px !important;
+        margin-bottom: 12px !important;
+        padding: 10px 0 10px 10px !important;
+        overflow: visible !important;
+    }
+    
+    /* 暗黑主题下的优化 */
+    [data-theme="dark"] .material-carousel-img {
+        background: #2d2f31 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    }
+}
+
+/* 小屏移动端进一步优化 */
+@media (max-width: 480px) {
+    .material-carousel-img {
+        width: 250px !important;
+        height: 250px !important;
+        min-width: 250px !important;
+        max-width: 250px !important;
+        min-height: 250px !important;
+        max-height: 250px !important;
+        border-radius: 16px !important;
+        margin-right: 12px !important;
+    }
+    
+    .material-carousel-container {
+        height: 270px !important;
+        min-height: 270px !important;
+        padding: 10px 0 10px 8px !important;
+    }
+}
+
+/* ===== 移动端画廊图片尺寸缩小优化 ===== */
+@media (max-width: 768px) {
+    /* 移动端画廊图片缩小到原来的一半：150x150px */
+    .material-carousel-img {
+        width: 150px !important;
+        height: 150px !important;
+        min-width: 150px !important;
+        max-width: 150px !important;
+        min-height: 150px !important;
+        max-height: 150px !important;
+        border-radius: 12px !important;
+        margin-right: 12px !important;
+        margin-bottom: 0 !important;
+        object-fit: cover !important;
+        display: block !important;
+        box-shadow: 0 2px 8px rgba(60, 64, 67, 0.12), 0 1px 4px rgba(60, 64, 67, 0.08) !important;
+        background: #f8f9fa !important;
+        transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    }
+    
+    /* 画廊容器适配缩小后的尺寸 */
+    .material-carousel-container {
+        height: 170px !important;
+        min-height: 170px !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+        padding: 10px 0 10px 8px !important;
+        overflow: visible !important;
+    }
+    
+    /* 暗黑主题下的优化 */
+    [data-theme="dark"] .material-carousel-img {
+        background: #2d2f31 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+    }
+}
+
+/* 小屏移动端进一步优化：125x125px */
+@media (max-width: 480px) {
+    .material-carousel-img {
+        width: 125px !important;
+        height: 125px !important;
+        min-width: 125px !important;
+        max-width: 125px !important;
+        min-height: 125px !important;
+        max-height: 125px !important;
+        border-radius: 10px !important;
+        margin-right: 10px !important;
+    }
+    
+    .material-carousel-container {
+        height: 145px !important;
+        min-height: 145px !important;
+        padding: 10px 0 10px 6px !important;
+    }
+}
+
+/* ===== 移动端画廊位置优化 - 靠近header但保留优雅留白 ===== */
+@media (max-width: 768px) {
+    /* 优化画廊容器位置，让它距离header更近 */
+    .material-carousel-container {
+        margin-top: 4px !important; /* 从10px减少到4px，更贴近header */
+        margin-bottom: 12px !important; /* 保持底部适当间距 */
+        padding-top: 2px !important; /* 微调内部顶部padding */
+    }
+    
+    /* 调整hero section内部元素间距，让画廊上移 */
+    .hero-section .profile-avatar {
+        margin-bottom: 12px !important; /* 从16px减少到12px */
+    }
+    
+    .hero-section .google-doodle-name {
+        margin-bottom: 10px !important; /* 从16px减少到10px，让整体更紧凑 */
+        margin-top: 0 !important; /* 确保名字顶部没有额外间距 */
+    }
+    
+    /* 微调hero section的上边距，让整体内容上移 */
+    .hero-section {
+        padding-top: 24px !important; /* 从30px减少到24px */
+    }
+}
+
+/* 小屏移动端进一步优化 */
+@media (max-width: 480px) {
+    .material-carousel-container {
+        margin-top: 2px !important; /* 小屏幕进一步减少顶部间距 */
+        margin-bottom: 10px !important;
+        padding-top: 1px !important;
+    }
+    
+    .hero-section .profile-avatar {
+        margin-bottom: 10px !important;
+    }
+    
+    .hero-section .google-doodle-name {
+        margin-bottom: 8px !important;
+    }
+    
+    .hero-section {
+        padding-top: 18px !important; /* 小屏幕进一步减少 */
+    }
+}
+
+/* ===== 进一步优化移动端画廊位置 - 更接近header ===== */
+@media (max-width: 768px) {
+    /* 进一步减少画廊顶部间距，让它更贴近header */
+    .material-carousel-container {
+        margin-top: 0px !important; /* 从4px进一步减少到0px */
+        margin-bottom: 14px !important; /* 保持底部留白 */
+        padding-top: 0px !important; /* 去除顶部内边距 */
+    }
+    
+    /* 微调其他元素间距以保持视觉平衡 */
+    .hero-section .profile-avatar {
+        margin-bottom: 10px !important; /* 从12px减少到10px */
+    }
+    
+    .hero-section .google-doodle-name {
+        margin-bottom: 8px !important; /* 从10px减少到8px */
+        margin-top: 0 !important;
+    }
+    
+    /* 进一步减少hero section顶部间距 */
+    .hero-section {
+        padding-top: 20px !important; /* 从24px减少到20px */
+    }
+}
+
+/* 小屏移动端对应调整 */
+@media (max-width: 480px) {
+    .material-carousel-container {
+        margin-top: 0px !important; /* 同样去除顶部间距 */
+        margin-bottom: 12px !important; /* 保持适当底部间距 */
+        padding-top: 0px !important;
+    }
+    
+    .hero-section .profile-avatar {
+        margin-bottom: 8px !important; /* 进一步减少 */
+    }
+    
+    .hero-section .google-doodle-name {
+        margin-bottom: 6px !important; /* 进一步减少 */
+    }
+    
+    .hero-section {
+        padding-top: 16px !important; /* 从18px减少到16px */
+    }
+}
+
+/* ===== 移动端触控友好性优化 - 48px最小点击区域 ===== */
+@media (max-width: 768px) {
+    /* 1. 导航栏汉堡菜单按钮优化 - 增大点击区域 */
+    .nav-toggle {
+        padding: 12px !important; /* 从0.5rem(8px)增加到12px */
+        min-width: 48px !important;
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .nav-toggle:hover, .nav-toggle:focus {
+        background-color: rgba(66, 133, 244, 0.08) !important;
+    }
+    
+    .nav-toggle .material-icons {
+        font-size: 24px !important;
+    }
+    
+    /* 2. 桌面端主题切换按钮优化 - 增大点击区域 */
+    .navbar .theme-toggle {
+        padding: 12px !important; /* 从0.5rem(8px)增加到12px */
+        min-width: 48px !important;
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+    }
+    
+    /* 3. 移动端导航菜单项优化 - 增大垂直点击区域 */
+    .nav-links .nav-link {
+        padding: 18px 24px !important; /* 从16px增加到18px，确保总高度>=48px */
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        font-size: 16px !important;
+        line-height: 1.2 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 4. 移动端主题切换按钮优化 - 与导航项一致的大点击区域 */
+    .nav-links .theme-toggle {
+        padding: 18px 24px !important; /* 与导航项保持一致 */
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important; /* 居中对齐，与导航项一致 */
+        font-size: 16px !important;
+        text-align: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+          .nav-links .theme-toggle .material-icons {
+          margin-right: 8px !important;
+          font-size: 20px !important;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          transform-origin: center !important;
+      }
+      
+      /* 移动端主题切换动画支持 */
+      .nav-links .theme-toggle {
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          position: relative !important;
+          overflow: hidden !important;
+      }
+      
+      .nav-links .theme-toggle.switching .material-icons {
+          transform: rotate(180deg) scale(1.1) !important;
+      }
+      
+      .nav-links .theme-toggle::before {
+          content: '' !important;
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          width: 0 !important;
+          height: 0 !important;
+          background: var(--google-blue) !important;
+          border-radius: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          opacity: 0 !important;
+          z-index: -1 !important;
+      }
+      
+      .nav-links .theme-toggle.switching::before {
+          width: 80px !important;
+          height: 80px !important;
+          opacity: 0.1 !important;
+      }
+      
+      .nav-links .theme-toggle.switched {
+          animation: themeSuccess 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+      
+      /* 暗黑主题下的涟漪颜色 */
+      [data-theme="dark"] .nav-links .theme-toggle::before {
+          background: rgba(255, 255, 255, 0.5) !important;
+      }
+    
+    /* 5. CTA按钮优化 - 确保足够大的点击区域 */
+    .cta-button, .hero-cta {
+        min-height: 48px !important;
+        padding: 16px 32px !important; /* 增加垂直padding */
+        font-size: 16px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 6. Footer联系方式图标优化 - 增大点击区域 */
+    .footer-contact-icon {
+        min-width: 48px !important;
+        min-height: 48px !important;
+        padding: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        margin: 4px !important;
+    }
+    
+    .footer-contact-icon .material-icons {
+        font-size: 24px !important;
+    }
+    
+    /* 7. 主页联系方式卡片优化 - 确保足够的点击区域 */
+    .contact-item {
+        min-height: 72px !important; /* 联系卡片相对较大，使用72px */
+        padding: 18px 24px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+    
+    .contact-item .material-icons {
+        font-size: 28px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    /* 8. 项目卡片学习更多按钮优化 */
+    .learn-more-btn {
+        min-height: 48px !important;
+        padding: 14px 24px !important;
+        font-size: 15px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 9. 博客阅读更多按钮优化 */
+    .read-more-btn {
+        min-height: 48px !important;
+        padding: 14px 24px !important;
+        font-size: 15px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 10. 面包屑导航链接优化 */
+    .breadcrumb-link {
+        min-height: 32px !important; /* 面包屑相对较小，但仍要易于点击 */
+        padding: 8px 12px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        border-radius: 6px !important;
+        transition: background-color 0.2s ease !important;
+    }
+    
+    .breadcrumb-link:hover, .breadcrumb-link:focus {
+        background-color: rgba(66, 133, 244, 0.08) !important;
+    }
+    
+    /* 11. 订阅按钮优化 */
+    .subscribe-btn {
+        min-height: 48px !important;
+        padding: 14px 24px !important;
+        font-size: 15px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 12. 输入框优化 - 确保足够的触控区域 */
+    .subscribe-input, input[type="email"], input[type="text"] {
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        font-size: 16px !important; /* 防止iOS缩放 */
+        line-height: 1.2 !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* ===== 480px及以下设备的额外优化 ===== */
+@media (max-width: 480px) {
+    /* 更大的触控区域，适应更小的屏幕 */
+    .nav-toggle {
+        min-width: 52px !important;
+        min-height: 52px !important;
+        padding: 14px !important;
+    }
+    
+    .navbar .theme-toggle {
+        min-width: 52px !important;
+        min-height: 52px !important;
+        padding: 14px !important;
+    }
+    
+    .nav-links .nav-link {
+        padding: 20px 24px !important; /* 进一步增大垂直padding */
+        min-height: 52px !important;
+        font-size: 17px !important; /* 稍大的字体提升可读性 */
+    }
+    
+    .nav-links .theme-toggle {
+        padding: 20px 24px !important;
+        min-height: 52px !important;
+        font-size: 17px !important;
+        justify-content: center !important; /* 480px下也保持居中 */
+        text-align: center !important;
+    }
+    
+    .cta-button, .hero-cta {
+        min-height: 52px !important;
+        padding: 18px 32px !important;
+        font-size: 17px !important;
+    }
+    
+    .contact-item {
+        min-height: 80px !important;
+        padding: 20px 24px !important;
+    }
+    
+    .contact-item .material-icons {
+        font-size: 32px !important;
+        margin-bottom: 8px !important;
+    }
+}
+
+/* ===== 触控状态反馈优化 ===== */
+@media (max-width: 768px) {
+    /* 为所有可点击元素添加触控反馈 */
+    .nav-toggle:active,
+    .theme-toggle:active,
+    .nav-link:active,
+    .cta-button:active,
+    .hero-cta:active,
+    .learn-more-btn:active,
+    .read-more-btn:active,
+    .subscribe-btn:active,
+    .contact-item:active,
+    .footer-contact-icon:active,
+    .breadcrumb-link:active {
+        transform: scale(0.96) !important;
+        transition: transform 0.1s ease !important;
+    }
+    
+    /* 触控焦点状态 */
+    .nav-toggle:focus,
+    .theme-toggle:focus,
+    .nav-link:focus,
+    .cta-button:focus,
+    .hero-cta:focus,
+    .learn-more-btn:focus,
+    .read-more-btn:focus,
+    .subscribe-btn:focus,
+    .contact-item:focus,
+    .footer-contact-icon:focus,
+    .breadcrumb-link:focus {
+        outline: 2px solid var(--google-blue) !important;
+        outline-offset: 2px !important;
+    }
+}
+
+/* ===== 确保桌面端不受影响 ===== */
+@media (min-width: 769px) {
+    /* 重置桌面端样式，确保移动端优化不影响桌面体验 */
+    .nav-toggle {
+        display: none !important;
+    }
+    
+    .theme-toggle {
+        padding: 0.5rem !important; /* 恢复原始桌面端padding */
+        min-width: auto !important;
+        min-height: auto !important;
+    }
+    
+    .nav-link {
+        padding: 0 !important;
+        min-height: auto !important;
+    }
+    
+    .breadcrumb-link {
+        padding: 0 !important;
+        min-height: auto !important;
+    }
+}
+
+/* ===== 桌面端主题切换按钮动效优化 ===== */
+@media (min-width: 769px) {
+    .navbar .theme-toggle {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    
+    .navbar .theme-toggle .material-icons {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transform-origin: center !important;
+    }
+    
+    .navbar .theme-toggle.switching .material-icons {
+        transform: rotate(180deg) scale(1.2) !important;
+    }
+    
+    .navbar .theme-toggle::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: var(--google-blue) !important;
+        border-radius: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        opacity: 0 !important;
+        z-index: -1 !important;
+    }
+    
+    .navbar .theme-toggle.switching::before {
+        width: 60px !important;
+        height: 60px !important;
+        opacity: 0.1 !important;
+    }
+    
+    .navbar .theme-toggle.switched {
+        animation: themeSuccess 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    
+    /* 暗黑主题下的涟漪颜色 */
+    [data-theme="dark"] .navbar .theme-toggle::before {
+        background: rgba(255, 255, 255, 0.5) !important;
+    }
 }

@@ -226,6 +226,54 @@ function initializeTheme() {
         }
     })();
 
+    // 检测系统主题偏好
+    function getSystemTheme() {
+        if (window.matchMedia) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return 'light';
+    }
+
+    // 获取初始主题（优先级：localStorage > 系统设置 > 默认light）
+    function getInitialTheme() {
+        if (isLocalStorageAvailable) {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+        }
+        return getSystemTheme();
+    }
+
+    // 更新主题按钮状态
+    function updateThemeButton(theme) {
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('.material-icons');
+            if (icon) {
+                icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
+            }
+            themeToggle.setAttribute('data-theme-mode', theme);
+        }
+    }
+
+    // 应用主题
+    function applyTheme(theme, withAnimation = false) {
+        html.setAttribute('data-theme', theme);
+        updateThemeButton(theme);
+        
+        if (isLocalStorageAvailable) {
+            localStorage.setItem('theme', theme);
+        }
+        
+        // 添加平滑过渡
+        if (withAnimation) {
+            html.style.transition = 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            setTimeout(() => {
+                html.style.transition = '';
+            }, 400);
+        }
+    }
+
     if (themeToggle) {
         // 移除可能存在的旧事件监听器
         themeToggle.removeEventListener('click', toggleThemeHandler);
@@ -238,52 +286,77 @@ function initializeTheme() {
         console.error('Theme toggle button not found!');
     }
 
-    // 主题切换处理函数
-    function toggleThemeHandler() {
+    // 主题切换处理函数（带动效）
+    function toggleThemeHandler(e) {
         try {
-            console.log('Theme toggle clicked'); // 调试日志
+            e.preventDefault();
+            console.log('Theme toggle clicked');
             
             const currentTheme = html.getAttribute('data-theme') || 'light';
-            console.log('Current theme:', currentTheme); // 调试日志
-            
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            // 同时更新DOM和localStorage
-            html.setAttribute('data-theme', newTheme);
+            // 添加动效类
+            themeToggle.classList.add('switching');
             
-            if (isLocalStorageAvailable) {
-                localStorage.setItem('theme', newTheme);
-            }
+            // 延迟应用主题切换，让动效播放
+            setTimeout(() => {
+                applyTheme(newTheme, true);
+                
+                // 添加成功反馈动效
+                themeToggle.classList.remove('switching');
+                themeToggle.classList.add('switched');
+                
+                // 清除成功动效类
+                setTimeout(() => {
+                    themeToggle.classList.remove('switched');
+                }, 400);
+                
+            }, 150);
             
-            // Update button icon
-            const icon = themeToggle.querySelector('.material-icons');
-            if (icon) {
-                icon.textContent = newTheme === 'dark' ? 'dark_mode' : 'light_mode';
-            }
-            
-            console.log('Theme changed to:', newTheme); // 调试日志
+            console.log('Theme changed to:', newTheme);
         } catch (error) {
             console.error('Error toggling theme:', error);
+            // 清除动效类以防出错
+            themeToggle.classList.remove('switching', 'switched');
         }
     }
 
-    // Load saved theme and update button icon
-    try {
-        const savedTheme = isLocalStorageAvailable ? (localStorage.getItem('theme') || 'light') : 'light';
-        html.setAttribute('data-theme', savedTheme);
+    // 监听系统主题变化
+    if (window.matchMedia) {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         
-        if (themeToggle) {
-            const icon = themeToggle.querySelector('.material-icons');
-            if (icon) {
-                icon.textContent = savedTheme === 'dark' ? 'dark_mode' : 'light_mode';
+        function handleSystemThemeChange(e) {
+            // 只有在没有保存用户偏好时才跟随系统
+            if (!isLocalStorageAvailable || !localStorage.getItem('theme')) {
+                const systemTheme = e.matches ? 'dark' : 'light';
+                console.log('System theme changed to:', systemTheme);
+                applyTheme(systemTheme, true);
             }
         }
         
-        console.log('Theme loaded:', savedTheme);
+        // 监听系统主题变化
+        mediaQuery.addListener(handleSystemThemeChange);
+        
+        // 现代浏览器的API
+        if (mediaQuery.addEventListener) {
+            mediaQuery.addEventListener('change', handleSystemThemeChange);
+        }
+    }
+
+    // 初始化主题
+    try {
+        const initialTheme = getInitialTheme();
+        applyTheme(initialTheme);
+        console.log('Theme initialized:', initialTheme);
+        
+        // 如果是首次访问且跟随系统主题，给用户提示
+        if (!isLocalStorageAvailable || !localStorage.getItem('theme')) {
+            console.log('Following system theme preference');
+        }
     } catch (error) {
-        console.error('Error loading theme:', error);
+        console.error('Error initializing theme:', error);
         // 设置默认主题
-        html.setAttribute('data-theme', 'light');
+        applyTheme('light');
     }
 }
 
