@@ -10565,3 +10565,180 @@ button[onclick*="viewDetails"] {
         background: rgba(255, 255, 255, 0.5) !important;
     }
 }
+
+/* =================================================================
+   Footer布局稳定性修复 - 统一覆盖所有footer样式
+   解决mailto点击、视口变化导致的图标错位变形问题
+   ================================================================= */
+
+/* 基础footer容器 - 防止溢出和布局不稳定 */
+.site-footer {
+  width: 100vw !important;
+  background: #f8f9fa !important;
+  border-top: 1px solid var(--border) !important;
+  padding: 40px 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important; /* 防止横向溢出 */
+  min-height: 80px !important; /* 确保最小高度 */
+  position: relative !important; /* 确保定位上下文 */
+}
+
+/* Footer行布局 - 使用稳定的flex布局 */
+.footer-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important; /* 改为space-between确保稳定布局 */
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  padding: 0 60px !important;
+  box-sizing: border-box !important;
+  min-height: 48px !important; /* 确保最小高度 */
+}
+
+/* Footer中心内容 - 防止溢出 */
+.footer-center {
+  flex: 1 1 auto !important;
+  text-align: center !important;
+  font-size: 1.05rem !important;
+  color: #888 !important;
+  font-weight: 400 !important;
+  min-width: 0 !important; /* 防止flex子元素溢出 */
+  word-wrap: break-word !important; /* 长文本换行 */
+  overflow-wrap: break-word !important; /* 额外的换行保护 */
+}
+
+/* Footer右侧图标 - 使用flex布局替代absolute定位 */
+.footer-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  flex-shrink: 0 !important; /* 防止收缩 */
+  margin-left: auto !important; /* 确保右对齐 */
+  position: static !important; /* 移除absolute定位 */
+  transform: none !important; /* 移除transform */
+}
+
+/* Footer联系图标 - 防止变形和错位 */
+.footer-contact-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: none !important;
+  color: #444 !important;
+  font-size: 1.35rem !important;
+  transition: background 0.2s, color 0.2s !important;
+  flex-shrink: 0 !important; /* 防止图标收缩变形 */
+  text-decoration: none !important; /* 移除链接下划线 */
+  box-sizing: border-box !important; /* 确保尺寸计算正确 */
+}
+
+.footer-contact-icon .material-icons {
+  font-size: 1.35rem !important;
+  flex-shrink: 0 !important; /* 防止图标收缩 */
+  line-height: 1 !important; /* 确保图标居中 */
+}
+
+.footer-contact-icon:hover {
+  background: #e3e6ea !important;
+  color: var(--google-blue) !important;
+}
+
+/* 暗色主题 */
+[data-theme="dark"] .site-footer {
+  background: #23272f !important;
+  border-top: 1px solid #444 !important;
+}
+
+[data-theme="dark"] .footer-center {
+  color: #aaa !important;
+}
+
+[data-theme="dark"] .footer-contact-icon {
+  color: #ccc !important;
+}
+
+[data-theme="dark"] .footer-contact-icon:hover {
+  background: #333a44 !important;
+  color: #5b9df9 !important;
+}
+
+/* 响应式布局 - 平板端 */
+@media (max-width: 900px) {
+  .site-footer {
+    padding: 28px 0 !important;
+  }
+  
+  .footer-row {
+    max-width: 100vw !important;
+    padding: 0 16px !important;
+  }
+  
+  .footer-right {
+    gap: 14px !important;
+  }
+}
+
+/* 响应式布局 - 手机端 */
+@media (max-width: 600px) {
+  .footer-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 18px !important;
+    min-height: 80px !important;
+    padding: 0 8px !important;
+  }
+  
+  .footer-center {
+    order: 1 !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .footer-right {
+    order: 2 !important;
+    gap: 14px !important;
+    margin-left: 0 !important; /* 移动端居中 */
+  }
+}
+
+/* 额外的布局稳定性保护 */
+.footer-row * {
+  box-sizing: border-box !important;
+}
+
+/* 防止邮件链接点击时的布局跳动 */
+.footer-contact-icon[href^="mailto:"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* 确保所有footer内容不会被其他元素影响 */
+.site-footer * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* 防止footer在不同页面间的样式冲突 */
+body .site-footer {
+  flex-shrink: 0 !important;
+}
+
+/* 确保footer在页面底部的稳定性 */
+html, body {
+  height: 100% !important;
+}
+
+body {
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+main, .hero-section {
+  flex: 1 0 auto !important;
+}
