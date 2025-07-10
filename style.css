@@ -175,7 +175,7 @@ body::after, body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 2rem;
+    padding: 0.75rem 1.5rem; /* 减少左右padding，让logo更靠近边缘 */
     background-color: var(--surface);
     border-bottom: 1px solid var(--border);
     position: sticky;
@@ -196,7 +196,7 @@ body::after, body::before {
   display: flex;
   align-items: center;
   height: 100%; /* 占满navbar的高度 */
-  padding-left: 20px; /* logo与左边缘的距离 */
+  padding-left: 8px; /* 更贴近左边，Google风格 */
 }
 
 /* Logo图片样式 - 填满header高度 */
@@ -895,7 +895,7 @@ body::after, body::before {
 
 @media (max-width: 480px) {
     .navbar {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 0.75rem; /* 移动端更紧凑，logo贴近左边 */
     }
     
     .avatar-container {
