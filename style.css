@@ -208,11 +208,19 @@ body::after, body::before {
     text-decoration: none;
     color: var(--text-secondary);
     font-weight: 400;
-    transition: color 0.3s ease;
+    transition: all 0.2s ease;
     position: relative;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: transparent;
 }
 
-.nav-link:hover,
+.nav-link:hover {
+    color: var(--google-blue);
+    background: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .nav-link.active {
     color: var(--google-blue);
 }
@@ -226,6 +234,12 @@ body::after, body::before {
     height: 2px;
     background-color: var(--google-blue);
     border-radius: 1px;
+}
+
+/* 深色主题下的导航链接悬停效果 */
+[data-theme="dark"] .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 .theme-toggle {
@@ -9641,9 +9655,11 @@ button[onclick*="viewDetails"] {
     .nav-links .nav-link {
         transform: none !important;
         opacity: 1 !important;
-        padding: 0 !important;
         border: none !important;
         margin: 0 !important;
+        /* 保留桌面端的悬停效果padding */
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
     }
     
     .nav-toggle.open {
