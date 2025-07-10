@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAvatar();
     initializeNavigation();
     initializeNameClick();
+    initializeShareButton();
 
     // 为项目卡片添加点击功能（仅projects页面，避免about页面影响头像）
     if (window.location.pathname.includes('projects')) {
@@ -630,6 +631,19 @@ document.head.appendChild(style);
   });
 })(); 
 
+function initializeShareButton() {
+    // 查找所有分享按钮
+    const shareButtons = document.querySelectorAll('a[title="Share"]');
+    
+    shareButtons.forEach(button => {
+        // 阻止默认的链接行为
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            shareProfile();
+        });
+    });
+}
+
 function shareProfile() {
   const url = "https://zachzhang0928.github.io/zachzhang/";
   if (navigator.share) {
@@ -637,11 +651,50 @@ function shareProfile() {
       title: "Zach Zhang's Portfolio",
       text: "Check out Zach Zhang's portfolio - CS Student at Northeastern University",
       url: url
+    }).catch(err => {
+      console.log('分享失败:', err);
+      // 如果原生分享失败，降级到复制链接
+      fallbackCopyToClipboard(url);
     });
   } else {
+    fallbackCopyToClipboard(url);
+  }
+}
+
+function fallbackCopyToClipboard(url) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(() => {
-      showToast("Link copied to clipboard!");
+      showToast("链接已复制到剪贴板！");
+    }).catch(err => {
+      console.log('复制失败:', err);
+      // 最后的降级方案
+      legacyCopyToClipboard(url);
     });
+  } else {
+    legacyCopyToClipboard(url);
+  }
+}
+
+function legacyCopyToClipboard(url) {
+  // 创建临时input元素
+  const tempInput = document.createElement('input');
+  tempInput.value = url;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  tempInput.setSelectionRange(0, 99999); // 移动端兼容
+  
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      showToast("链接已复制到剪贴板！");
+    } else {
+      showToast("复制失败，请手动复制：" + url);
+    }
+  } catch (err) {
+    console.log('复制失败:', err);
+    showToast("复制失败，请手动复制：" + url);
+  } finally {
+    document.body.removeChild(tempInput);
   }
 }
 function showToast(message) {
